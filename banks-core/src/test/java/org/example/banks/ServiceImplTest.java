@@ -79,6 +79,7 @@ public class ServiceImplTest {
         bankRepository.create(bank);
         bankService.registerUser(user, bank);
 
+
         Assertions.assertEquals(true, bank.getNotifications().isEmpty());
         bankService.addNotifyUser(notification, user, bank);
         Assertions.assertEquals(false, bank.getNotifications().isEmpty());
