@@ -27,20 +27,14 @@ public class UserRepositoryImpl implements UserRepository {
     public User update(
             User user
     ) {
-        if (user.getAddress() != null && user.getPassportData() != null) {
-            user.setStatus(Status.WORKING);
-        }
-
+        user.validateData();
         return userTable.put(user.getId(), user);
     }
 
     public User create(
             User user
     ) {
-        if (user.getAddress() == null || user.getPassportData() == null) {
-            user.setStatus(Status.FLAGGED);
-        }
-
+        user.validateData();
         return userTable.put(user.getId(), user);
     }
 
@@ -59,60 +53,6 @@ public class UserRepositoryImpl implements UserRepository {
 
         return result;
     }
-
-
-    public Account makeTransaction(
-            Transaction transaction
-    ) {
-
-        var user = userTable.get(transaction.getAccountFrom());
-        var account = user.getAccount();
-        var balance = account.getBalance();
-        var transactions = account.getTransactions();
-
-        var rand = new Random();
-        transaction.setId(rand.nextLong());
-
-        var meta = new Meta();
-        meta.setId(transaction.getId());
-        meta.setTransaction(transaction);
-        meta.setDay(transaction.getDay());
-
-        if (user.getStatus().equals(Status.FLAGGED)) {
-            transaction.setStatus(org.example.banks.domain.transaction.Status.CANCELLED);
-            transactions.add(meta);
-            return account;
-        }
-
-        switch (transaction.getType()) {
-            case WITHDRAWAL:
-                account.setBalance(balance - transaction.getAmount());
-                transactions.add(meta);
-                break;
-            case DEPOSIT:
-                account.setBalance(balance + transaction.getAmount());
-                transactions.add(meta);
-                break;
-            case TRANSFER:
-                var accountFrom = user.getAccount();
-                var balanceFrom = account.getBalance();
-                var transactionsAccountFrom = account.getTransactions();
-
-                var accountTo = userTable.get(transaction.getAccountTo()).getAccount();
-                var balanceTo = accountTo.getBalance();
-                var transactionsAccountTo = accountTo.getTransactions();
-
-                accountFrom.setBalance(balanceFrom - transaction.getAmount());
-                accountTo.setBalance(balanceTo + transaction.getAmount());
-
-                transactionsAccountFrom.add(meta);
-                transactionsAccountTo.add(meta);
-                break;
-        }
-
-        return account;
-    }
-
 
     public HashMap<Long, User> getAll() {
         return userTable;

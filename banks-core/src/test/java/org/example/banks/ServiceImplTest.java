@@ -32,10 +32,10 @@ public class ServiceImplTest {
     @Test
     void cancelTransaction() {
 
-        var bankRepository = new BankRepositoryImpl();
-        var userRepository = new UserRepositoryImpl();
-        var bankService = new BankServiceImpl(bankRepository, userRepository);
-        var userService = new UserServiceImpl(userRepository);
+        BankRepository bankRepository = new BankRepositoryImpl();
+        UserRepository userRepository = new UserRepositoryImpl();
+        UserService userService = new UserServiceImpl(userRepository);
+        BankService bankService = new BankServiceImpl(bankRepository, userService);
 
         Bank bank = new Bank();
 
@@ -54,7 +54,7 @@ public class ServiceImplTest {
         bankRepository.create(bank);
         bankService.registerUser(user, bank);
 
-        userService.makeTransaction(transaction);
+        userService.makeDepositTransaction(transaction);
 
         Assertions.assertEquals(50, account.getBalance());
         bankService.cancelTransaction(transaction);
@@ -63,9 +63,10 @@ public class ServiceImplTest {
 
     @Test
     void addNotification() {
-        var bankRepository = new BankRepositoryImpl();
-        var userRepository = new UserRepositoryImpl();
-        var bankService = new BankServiceImpl(bankRepository, userRepository);
+        BankRepository bankRepository = new BankRepositoryImpl();
+        UserRepository userRepository = new UserRepositoryImpl();
+        UserService userService = new UserServiceImpl(userRepository);
+        BankService bankService = new BankServiceImpl(bankRepository, userService);
 
         Bank bank = new Bank();
 
@@ -88,9 +89,10 @@ public class ServiceImplTest {
 
     @Test
     void registerUser() {
-        var bankRepository = new BankRepositoryImpl();
-        var userRepository = new UserRepositoryImpl();
-        var bankService = new BankServiceImpl(bankRepository, userRepository);
+        BankRepository bankRepository = new BankRepositoryImpl();
+        UserRepository userRepository = new UserRepositoryImpl();
+        UserService userService = new UserServiceImpl(userRepository);
+        BankService bankService = new BankServiceImpl(bankRepository, userService);
 
         Bank bank = new Bank();
 
@@ -127,8 +129,8 @@ public class ServiceImplTest {
     void getFixedRate() {
         BankRepository bankRepository = new BankRepositoryImpl();
         UserRepository userRepository = new UserRepositoryImpl();
-        BankService bankService = new BankServiceImpl(bankRepository, userRepository);
         UserService userService = new UserServiceImpl(userRepository);
+        BankService bankService = new BankServiceImpl(bankRepository, userService);
         CentralBankService centralBankService = new CentralBankServiceImpl(bankRepository);
 
         var random = new Random();
@@ -171,7 +173,7 @@ public class ServiceImplTest {
                 tx.setAmount(5);
                 tx.setDay(i);
                 tx.setAccountFrom(user.getId());
-                userService.makeTransaction(tx);
+                userService.makeDepositTransaction(tx);
             }
 
         }
@@ -199,7 +201,7 @@ public class ServiceImplTest {
                 tx.setAmount(5);
                 tx.setDay(i);
                 tx.setAccountFrom(user.getId());
-                userService.makeTransaction(tx);
+                userService.makeDepositTransaction(tx);
             }
         }
 

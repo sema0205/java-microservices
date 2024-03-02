@@ -49,16 +49,6 @@ public interface UserRepository {
     );
 
     /**
-     * init transaction in any type
-     *
-     * @param transaction is tx entity
-     * @return account entity
-     */
-    Account makeTransaction(
-            Transaction transaction
-    );
-
-    /**
      * get all users info
      *
      * @return map of users

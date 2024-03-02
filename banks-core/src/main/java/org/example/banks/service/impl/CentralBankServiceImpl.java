@@ -6,6 +6,8 @@ import org.example.banks.domain.bank.Bank;
 import org.example.banks.repository.BankRepository;
 import org.example.banks.service.CentralBankService;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class CentralBankServiceImpl implements CentralBankService {
@@ -21,5 +23,13 @@ public class CentralBankServiceImpl implements CentralBankService {
 
     public void notifyBanks() {
         bankRepository.initCharge();
+    }
+
+    public void notifyUsers() {
+        var banks = bankRepository.getAll();
+        for (Map.Entry<Long, Bank> entry : banks.entrySet()) {
+            var bank = entry.getValue();
+            bank.notifyUsers();
+        }
     }
 }
