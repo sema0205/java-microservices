@@ -1,0 +1,9 @@
+org.example.banks
+org.example.banks.domain.account
+org.example.banks.domain.bank
+org.example.banks.domain.transaction
+org.example.banks.domain.user
+org.example.banks.repository
+org.example.banks.repository.impl
+org.example.banks.service
+org.example.banks.service.impl
