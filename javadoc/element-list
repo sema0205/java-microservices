@@ -1,4 +1,5 @@
 org.example.banks
+org.example.banks.commands
 org.example.banks.domain.account
 org.example.banks.domain.bank
 org.example.banks.domain.transaction
