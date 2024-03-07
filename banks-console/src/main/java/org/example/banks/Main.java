@@ -12,9 +12,10 @@ import org.example.banks.service.impl.BankServiceImpl;
 import org.example.banks.service.impl.CentralBankServiceImpl;
 import org.example.banks.service.impl.UserServiceImpl;
 
-import java.util.*;
 
 import picocli.CommandLine;
+
+import java.util.Scanner;
 
 
 public class Main {

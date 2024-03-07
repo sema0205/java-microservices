@@ -1,37 +1,34 @@
 package org.example.banks.repository.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.example.banks.domain.account.Account;
-import org.example.banks.domain.account.Meta;
 import org.example.banks.domain.bank.Bank;
-import org.example.banks.domain.bank.Interest;
-import org.example.banks.domain.transaction.Status;
+import org.example.banks.domain.bank.IBank;
 import org.example.banks.domain.user.User;
 import org.example.banks.repository.BankRepository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RequiredArgsConstructor
 public class BankRepositoryImpl implements BankRepository {
 
-    private HashMap<Long, Bank> bankTable = new HashMap<>();
+    private HashMap<Long, IBank> bankTable = new HashMap<>();
 
-    public Bank getById(
+    public IBank getById(
             Long id
     ) {
         return bankTable.get(id);
     }
 
-    public Bank update(
-            Bank bank
+    public IBank update(
+            IBank bank
     ) {
         return bankTable.put(bank.getId(), bank);
     }
 
-    public Bank create(
-            Bank bank
+    public IBank create(
+            IBank bank
     ) {
         return bankTable.put(bank.getId(), bank);
     }
@@ -41,7 +38,7 @@ public class BankRepositoryImpl implements BankRepository {
     ) {
         User result = null;
 
-        for (Map.Entry<Long, Bank> entry : bankTable.entrySet()) {
+        for (Map.Entry<Long, IBank> entry : bankTable.entrySet()) {
             var bank = entry.getValue();
 
             if (bank.getUsers().get(userId) != null) {
@@ -54,7 +51,7 @@ public class BankRepositoryImpl implements BankRepository {
     }
 
     public void initCharge() {
-        for (Map.Entry<Long, Bank> entryBank : bankTable.entrySet()) {
+        for (Map.Entry<Long, IBank> entryBank : bankTable.entrySet()) {
             var bank = entryBank.getValue();
             var users = bank.getUsers();
 
@@ -66,7 +63,7 @@ public class BankRepositoryImpl implements BankRepository {
         }
     }
 
-    public HashMap<Long, Bank> getAll() {
+    public HashMap<Long, IBank> getAll() {
         return bankTable;
     }
 

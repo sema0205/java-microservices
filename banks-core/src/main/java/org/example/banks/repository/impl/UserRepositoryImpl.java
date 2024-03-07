@@ -1,17 +1,13 @@
 package org.example.banks.repository.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.example.banks.domain.account.Account;
-import org.example.banks.domain.account.Meta;
-import org.example.banks.domain.bank.Bank;
-import org.example.banks.domain.transaction.Transaction;
-import org.example.banks.domain.user.Status;
 import org.example.banks.domain.user.User;
 import org.example.banks.repository.UserRepository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {

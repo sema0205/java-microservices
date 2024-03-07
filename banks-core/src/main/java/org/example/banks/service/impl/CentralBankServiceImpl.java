@@ -3,6 +3,7 @@ package org.example.banks.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.example.banks.domain.bank.Bank;
+import org.example.banks.domain.bank.IBank;
 import org.example.banks.repository.BankRepository;
 import org.example.banks.service.CentralBankService;
 
@@ -14,8 +15,8 @@ public class CentralBankServiceImpl implements CentralBankService {
 
     private BankRepository bankRepository;
 
-    public Bank registerBank(
-            Bank bank
+    public IBank registerBank(
+            IBank bank
     ) {
         return bankRepository.create(bank);
     }
@@ -27,7 +28,7 @@ public class CentralBankServiceImpl implements CentralBankService {
 
     public void notifyUsers() {
         var banks = bankRepository.getAll();
-        for (Map.Entry<Long, Bank> entry : banks.entrySet()) {
+        for (Map.Entry<Long, IBank> entry : banks.entrySet()) {
             var bank = entry.getValue();
             bank.notifyUsers();
         }

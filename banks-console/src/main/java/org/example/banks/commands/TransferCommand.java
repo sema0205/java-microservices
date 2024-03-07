@@ -1,7 +1,7 @@
 package org.example.banks.commands;
 
 import lombok.AllArgsConstructor;
-import org.example.banks.domain.transaction.Transaction;
+import org.example.banks.domain.transaction.Transfer;
 import org.example.banks.domain.transaction.Type;
 import org.example.banks.repository.UserRepository;
 import org.example.banks.service.UserService;
@@ -33,7 +33,7 @@ public class TransferCommand implements Callable<Integer> {
         System.out.printf("user name: %s\n", userInfo.getName());
         System.out.printf("user status: %s\n", userInfo.getStatus());
 
-        var tx = new Transaction();
+        var tx = new Transfer();
 
         System.out.print("enter money amount: ");
         var amount3 = scanner.nextLong();
@@ -48,7 +48,7 @@ public class TransferCommand implements Callable<Integer> {
         tx.setDay(random.nextInt(1, 25));
         tx.setAccountTo(accountIdTo);
 
-        var account3 = userService.makeTransferTransaction(tx);
+        var account3 = userService.makeTransaction(tx);
 
         System.out.printf("new account balance: %f\n", account3.getBalance());
 

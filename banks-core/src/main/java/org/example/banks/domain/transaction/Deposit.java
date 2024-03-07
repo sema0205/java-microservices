@@ -2,19 +2,15 @@ package org.example.banks.domain.transaction;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.banks.domain.account.Account;
+import org.example.banks.domain.account.IAccount;
 import org.example.banks.domain.account.Meta;
+import org.example.banks.domain.user.User;
 
 import java.util.Random;
 
-import static org.example.banks.domain.transaction.Type.TRANSFER;
-import static org.example.banks.domain.transaction.Type.WITHDRAWAL;
-import static org.example.banks.domain.transaction.Type.DEPOSIT;
-
 @Getter
 @Setter
-public class Transaction {
-
+public class Deposit implements ITransaction {
     private Long id;
 
     private double amount;
@@ -27,17 +23,7 @@ public class Transaction {
     private Long accountTo;
 
     public void cancelTransaction() {
-        switch (type) {
-            case TRANSFER:
-                var accountToSwap = accountTo;
-                accountTo = accountFrom;
-                accountFrom = accountToSwap;
-                break;
-            case WITHDRAWAL, DEPOSIT:
-                amount = -amount;
-                break;
-        }
-
+        amount = -amount;
         status = Status.CANCELLED;
     }
 
@@ -65,6 +51,41 @@ public class Transaction {
 
     public boolean isCancelled() {
         return status == Status.CANCELLED;
+    }
+
+
+    public Long getSenderAccountId() {
+        return accountFrom;
+    }
+
+
+    public Long getReceiverAccountId() {
+        return accountTo;
+    }
+
+
+    public double getTransactionAmount() {
+        return amount;
+    }
+
+
+    public IAccount initTransaction(User sender, User receiver) {
+        var account = sender.getAccount();
+        account.addTransaction(this);
+
+        if (sender.isFlagged()) {
+            status = Status.CANCELLED;
+            return account;
+        }
+
+        account.increaseBalance(this);
+
+        return account;
+    }
+
+
+    public double handleRateFees(double currentBalance, IAccount account) {
+        return currentBalance + amount;
     }
 
 }

@@ -2,6 +2,7 @@ package org.example.banks.commands;
 
 import lombok.AllArgsConstructor;
 import org.example.banks.domain.bank.Bank;
+import org.example.banks.domain.bank.IBank;
 import org.example.banks.repository.BankRepository;
 import picocli.CommandLine;
 
@@ -20,7 +21,7 @@ public class CheckBanksCommand implements Callable<Integer> {
     public Integer call() throws Exception {
         var bankMap = bankRepository.getAll();
 
-        for (Map.Entry<Long, Bank> entry : bankMap.entrySet()) {
+        for (Map.Entry<Long, IBank> entry : bankMap.entrySet()) {
             var bankInfo = entry.getValue();
 
             System.out.printf("bank id : %d\n", bankInfo.getId());

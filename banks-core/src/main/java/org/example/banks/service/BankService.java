@@ -1,8 +1,9 @@
 package org.example.banks.service;
 
 import org.example.banks.domain.bank.Bank;
+import org.example.banks.domain.bank.IBank;
 import org.example.banks.domain.bank.Notification;
-import org.example.banks.domain.transaction.Transaction;
+import org.example.banks.domain.transaction.ITransaction;
 import org.example.banks.domain.user.User;
 
 public interface BankService {
@@ -16,7 +17,7 @@ public interface BankService {
      */
     User registerUser(
             User user,
-            Bank bank
+            IBank bank
     );
 
     /**
@@ -35,8 +36,8 @@ public interface BankService {
      * @param bank entity
      * @return bank entity
      */
-    Bank update(
-            Bank bank
+    IBank update(
+            IBank bank
     );
 
     /**
@@ -45,8 +46,8 @@ public interface BankService {
      * @param transaction entity
      * @return tx entity
      */
-    Transaction cancelTransaction(
-            Transaction transaction
+    ITransaction cancelTransaction(
+            ITransaction transaction
     );
 
 
@@ -58,10 +59,10 @@ public interface BankService {
      * @param bank bank entity
      * @return bank entity
      */
-    Bank addNotifyUser(
+    IBank addNotifyUser(
             Notification notification,
             User user,
-            Bank bank
+            IBank bank
     );
 
 }

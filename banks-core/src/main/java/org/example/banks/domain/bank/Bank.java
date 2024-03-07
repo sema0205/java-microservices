@@ -3,7 +3,7 @@ package org.example.banks.domain.bank;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.banks.domain.account.Account;
+import org.example.banks.domain.account.IAccount;
 import org.example.banks.domain.account.Meta;
 import org.example.banks.domain.user.User;
 
@@ -11,7 +11,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class Bank {
+public class Bank implements IBank {
 
     private Long id;
 
@@ -63,102 +63,11 @@ public class Bank {
         }
     }
 
-    public void accrualDeposit(
-            Account account
-    ) {
-        var transactions = account.getTransactions();
-        transactions.sort(Comparator.comparingInt(Meta::getDay));
-
-        if (transactions.isEmpty()) {
-            return;
-        }
-
-        var fixedInterestValue = fixedInterest / 365 / 100;
-        double currentBalance = 0;
-
-        for (Meta meta : transactions) {
-            var tx = meta.getTransaction();
-
-            if (tx.isCancelled())
-                continue;
-
-            currentBalance = account.handleRateFees(currentBalance, tx);
-
-            currentBalance += (currentBalance * fixedInterestValue);
-        }
-
-        account.setBalance(currentBalance);
-    }
-
-    public void accrualDebit(
-            Account account
-    ) {
-        var transactions = account.getTransactions();
-        transactions.sort(Comparator.comparingInt(Meta::getDay));
-
-        if (transactions.isEmpty()) {
-            return;
-        }
-
-        var fixedInterestValue = fixedInterest / 365 / 100;
-        double currentBalance = 0;
-
-        for (Meta meta : transactions) {
-            var tx = meta.getTransaction();
-
-            if (tx.isCancelled())
-                continue;
-
-            currentBalance = account.handleRateFees(currentBalance, tx);
-
-            currentBalance += (currentBalance * fixedInterestValue);
-        }
-
-        account.setBalance(currentBalance);
-    }
-
-    public void accrualCredit(
-            Account account
-    ) {
-        var transactions = account.getTransactions();
-        transactions.sort(Comparator.comparingInt(Meta::getDay));
-
-        if (transactions.isEmpty()) {
-            return;
-        }
-
-        var commissionValue = commission / 365 / 100;
-        double currentBalanceValue = creditLimit;
-
-        for (Meta meta : transactions) {
-            var tx = meta.getTransaction();
-            if (tx.isCancelled())
-                continue;
-
-            currentBalanceValue = account.handleRateFees(currentBalanceValue, tx);
-
-            if (currentBalanceValue < 0) {
-                currentBalanceValue -= (currentBalanceValue * commissionValue);
-            }
-        }
-
-        account.setBalance(currentBalanceValue);
-    }
 
     public void handleAccrual(
-            Account account
+            IAccount account
     ) {
-        switch (account.getType()) {
-            case DEBIT:
-                accrualDebit(account);
-                break;
-            case DEPOSIT:
-                accrualDeposit(account);
-                break;
-            case CREDIT:
-                accrualCredit(account);
-                break;
-        }
+        account.accrualFees(this);
     }
 
 }

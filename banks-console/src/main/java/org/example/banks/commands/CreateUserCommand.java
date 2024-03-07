@@ -2,7 +2,7 @@ package org.example.banks.commands;
 
 
 import lombok.AllArgsConstructor;
-import org.example.banks.domain.account.Account;
+import org.example.banks.domain.account.Debit;
 import org.example.banks.domain.user.User;
 import org.example.banks.repository.BankRepository;
 import org.example.banks.service.BankService;
@@ -47,9 +47,8 @@ public class CreateUserCommand implements Callable<Integer> {
         var bankId = scanner.nextLong();
         var bank = bankRepository.getById(bankId);
 
-        var account = new Account();
+        var account = new Debit();
         account.setId((long) random.nextInt(1, 15));
-        account.setType(org.example.banks.domain.account.Type.DEBIT);
         user.setAccount(account);
 
         bankService.registerUser(user, bank);

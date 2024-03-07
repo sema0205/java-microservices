@@ -1,8 +1,5 @@
 package org.example.banks.repository;
 
-import org.example.banks.domain.account.Account;
-import org.example.banks.domain.bank.Bank;
-import org.example.banks.domain.transaction.Transaction;
 import org.example.banks.domain.user.User;
 
 import java.util.HashMap;

@@ -1,9 +1,9 @@
 package org.example.banks;
 
-import org.example.banks.domain.account.Account;
+import org.example.banks.domain.account.Debit;
 import org.example.banks.domain.bank.Bank;
 import org.example.banks.domain.bank.Interest;
-import org.example.banks.domain.transaction.Transaction;
+import org.example.banks.domain.transaction.Deposit;
 import org.example.banks.domain.transaction.Type;
 import org.example.banks.domain.user.User;
 import org.example.banks.repository.BankRepository;
@@ -46,21 +46,19 @@ public class Init {
             user.setPassportData("1324224");
             var bank = bankRepository.getById(1L);
 
-            var account = new Account();
+            var account = new Debit();
             account.setId((long) random.nextInt(1, 15));
-            account.setType(org.example.banks.domain.account.Type.DEBIT);
             user.setAccount(account);
 
             bankService.registerUser(user, bank);
 
             for (int i = 0; i < 70; i++) {
-                var tx = new Transaction();
+                var tx = new Deposit();
                 tx.setId((long) random.nextInt(1, 50));
-                tx.setType(Type.DEPOSIT);
                 tx.setAmount(5);
                 tx.setDay(i);
                 tx.setAccountFrom(user.getId());
-                userService.makeDepositTransaction(tx);
+                userService.makeTransaction(tx);
             }
 
         }
@@ -74,21 +72,20 @@ public class Init {
             user.setPassportData("4242");
             var bank = bankRepository.getById(1L);
 
-            var account = new Account();
+            var account = new Debit();
             account.setId((long) random.nextInt(1, 15));
-            account.setType(org.example.banks.domain.account.Type.DEBIT);
             user.setAccount(account);
 
             bankService.registerUser(user, bank);
 
             for (int i = 0; i < 60; i++) {
-                var tx = new Transaction();
+                var tx = new Deposit();
                 tx.setId((long) random.nextInt(1, 50));
                 tx.setType(Type.DEPOSIT);
                 tx.setAmount(5);
                 tx.setDay(i);
                 tx.setAccountFrom(user.getId());
-                userService.makeDepositTransaction(tx);
+                userService.makeTransaction(tx);
             }
         }
     }

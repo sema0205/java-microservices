@@ -1,39 +1,19 @@
 package org.example.banks.service;
 
-import org.example.banks.domain.account.Account;
-import org.example.banks.domain.transaction.Transaction;
+import org.example.banks.domain.account.IAccount;
+import org.example.banks.domain.transaction.ITransaction;
 import org.example.banks.domain.user.User;
 
 public interface UserService {
 
     /**
-     * init deposit tx
+     * init transaction
      *
      * @param transaction entity
      * @return return account entity
      */
-    Account makeDepositTransaction(
-            Transaction transaction
-    );
-
-    /**
-     * init withdrawal tx
-     *
-     * @param transaction entity
-     * @return return account entity
-     */
-    Account makeWithdrawalTransaction(
-            Transaction transaction
-    );
-
-    /**
-     * init transfer tx
-     *
-     * @param transaction entity
-     * @return return account entity
-     */
-    Account makeTransferTransaction(
-            Transaction transaction
+    IAccount makeTransaction(
+            ITransaction transaction
     );
 
     /**

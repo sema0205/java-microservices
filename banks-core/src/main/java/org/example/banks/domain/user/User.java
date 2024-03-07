@@ -2,7 +2,7 @@ package org.example.banks.domain.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.banks.domain.account.Account;
+import org.example.banks.domain.account.IAccount;
 import org.example.banks.domain.bank.Notification;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class User {
     private String address;
     private String passportData;
 
-    private Account account;
+    private IAccount account;
 
     private List<Notification> notifications = new ArrayList<>();
 
@@ -38,6 +38,10 @@ public class User {
             Notification notification
     ) {
         notifications.add(notification);
+    }
+
+    public boolean isFlagged(){
+        return status == Status.FLAGGED;
     }
 
 }
