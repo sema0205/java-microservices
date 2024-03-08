@@ -2,7 +2,7 @@ package org.example.banks.domain.transaction;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.banks.domain.account.IAccount;
+import org.example.banks.domain.account.Account;
 import org.example.banks.domain.account.Meta;
 import org.example.banks.domain.user.User;
 
@@ -10,7 +10,13 @@ import java.util.Random;
 
 @Getter
 @Setter
-public class Deposit implements ITransaction {
+public class Deposit implements Transaction {
+
+    public Deposit() {
+        var rand = new Random();
+        id = (long) rand.nextInt(1, 1000000);
+    }
+
     private Long id;
 
     private double amount;
@@ -46,7 +52,7 @@ public class Deposit implements ITransaction {
 
     public void setRandomId() {
         var rand = new Random();
-        id = (long) rand.nextInt(1, 50);
+        id = (long) rand.nextInt(1, 1000000);
     }
 
     public boolean isCancelled() {
@@ -69,7 +75,7 @@ public class Deposit implements ITransaction {
     }
 
 
-    public IAccount initTransaction(User sender, User receiver) {
+    public Account initTransaction(User sender, User receiver) {
         var account = sender.getAccount();
         account.addTransaction(this);
 
@@ -84,7 +90,7 @@ public class Deposit implements ITransaction {
     }
 
 
-    public double handleRateFees(double currentBalance, IAccount account) {
+    public double handleRateFees(double currentBalance, Account account) {
         return currentBalance + amount;
     }
 

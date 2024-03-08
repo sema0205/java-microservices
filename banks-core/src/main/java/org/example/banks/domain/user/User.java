@@ -2,15 +2,21 @@ package org.example.banks.domain.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.banks.domain.account.IAccount;
+import org.example.banks.domain.account.Account;
 import org.example.banks.domain.bank.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Getter
 @Setter
 public class User {
+
+    public User() {
+        var rand = new Random();
+        id = (long) rand.nextInt(1, 150);
+    }
 
     private Long id;
 
@@ -22,7 +28,7 @@ public class User {
     private String address;
     private String passportData;
 
-    private IAccount account;
+    private Account account;
 
     private List<Notification> notifications = new ArrayList<>();
 

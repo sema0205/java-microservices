@@ -2,9 +2,8 @@ package org.example.banks.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.example.banks.domain.bank.Bank;
-import org.example.banks.domain.bank.IBank;
 import org.example.banks.domain.bank.Notification;
-import org.example.banks.domain.transaction.ITransaction;
+import org.example.banks.domain.transaction.Transaction;
 import org.example.banks.domain.user.User;
 import org.example.banks.repository.BankRepository;
 import org.example.banks.service.BankService;
@@ -19,7 +18,7 @@ public class BankServiceImpl implements BankService {
 
     public User registerUser(
             User user,
-            IBank bank
+            Bank bank
     ) {
         var users = bank.getUsers();
         users.put(user.getId(), user);
@@ -35,14 +34,14 @@ public class BankServiceImpl implements BankService {
     }
 
 
-    public IBank update(
-            IBank bank
+    public Bank update(
+            Bank bank
     ) {
         return bankRepository.update(bank);
     }
 
-    public ITransaction cancelTransaction(
-            ITransaction transaction
+    public Transaction cancelTransaction(
+            Transaction transaction
     ) {
         transaction.cancelTransaction();
         userService.makeTransaction(transaction);
@@ -50,10 +49,10 @@ public class BankServiceImpl implements BankService {
         return transaction;
     }
 
-    public IBank addNotifyUser(
+    public Bank addNotifyUser(
             Notification notification,
             User user,
-            IBank bank
+            Bank bank
     ) {
         bank.addNotifyUser(notification, user);
         return bank;

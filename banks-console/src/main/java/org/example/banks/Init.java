@@ -1,7 +1,7 @@
 package org.example.banks;
 
 import org.example.banks.domain.account.Debit;
-import org.example.banks.domain.bank.Bank;
+import org.example.banks.domain.bank.BankImpl;
 import org.example.banks.domain.bank.Interest;
 import org.example.banks.domain.transaction.Deposit;
 import org.example.banks.domain.transaction.Type;
@@ -21,8 +21,7 @@ public class Init {
         BankRepository bankRepository,
         BankService bankService
     ) {
-        var defaultBank = new Bank();
-        defaultBank.setId(1L);
+        var defaultBank = new BankImpl();
         defaultBank.setCommission(4);
         defaultBank.setFixedInterest(6);
         defaultBank.setCreditLimit(50000);
@@ -35,26 +34,21 @@ public class Init {
 
         centralBankService.registerBank(defaultBank);
 
-        var random = new Random();
-
         {
             var user = new User();
-            user.setId(1L);
             user.setName("lesha");
             user.setLastName("vertov");
             user.setAddress("lenina 23");
             user.setPassportData("1324224");
-            var bank = bankRepository.getById(1L);
+            var bank = bankRepository.getById(defaultBank.getId());
 
             var account = new Debit();
-            account.setId((long) random.nextInt(1, 15));
             user.setAccount(account);
 
             bankService.registerUser(user, bank);
 
             for (int i = 0; i < 70; i++) {
                 var tx = new Deposit();
-                tx.setId((long) random.nextInt(1, 50));
                 tx.setAmount(5);
                 tx.setDay(i);
                 tx.setAccountFrom(user.getId());
@@ -65,23 +59,19 @@ public class Init {
 
         {
             var user = new User();
-            user.setId(2L);
             user.setName("vadim");
             user.setLastName("petrov");
             user.setAddress("pobeda 63");
             user.setPassportData("4242");
-            var bank = bankRepository.getById(1L);
+            var bank = bankRepository.getById(defaultBank.getId());
 
             var account = new Debit();
-            account.setId((long) random.nextInt(1, 15));
             user.setAccount(account);
 
             bankService.registerUser(user, bank);
 
             for (int i = 0; i < 60; i++) {
                 var tx = new Deposit();
-                tx.setId((long) random.nextInt(1, 50));
-                tx.setType(Type.DEPOSIT);
                 tx.setAmount(5);
                 tx.setDay(i);
                 tx.setAccountFrom(user.getId());

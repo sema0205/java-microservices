@@ -41,8 +41,6 @@ public class TransferCommand implements Callable<Integer> {
         System.out.print("enter account transfer id to: ");
         var accountIdTo = scanner.nextLong();
 
-        tx.setId((long) random.nextInt(1, 25));
-        tx.setType(Type.TRANSFER);
         tx.setAmount(amount3);
         tx.setAccountFrom(userInfo.getId());
         tx.setDay(random.nextInt(1, 25));

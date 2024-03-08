@@ -2,7 +2,7 @@ package org.example.banks.domain.account;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.banks.domain.transaction.ITransaction;
+import org.example.banks.domain.transaction.Transaction;
 
 
 /**
@@ -16,6 +16,6 @@ public class Meta {
 
     private Integer day;
 
-    private ITransaction transaction;
+    private Transaction transaction;
 
 }

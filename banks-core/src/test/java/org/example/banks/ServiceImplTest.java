@@ -2,7 +2,7 @@ package org.example.banks;
 
 
 import org.example.banks.domain.account.Debit;
-import org.example.banks.domain.bank.Bank;
+import org.example.banks.domain.bank.BankImpl;
 import org.example.banks.domain.bank.Interest;
 import org.example.banks.domain.bank.Notification;
 import org.example.banks.domain.transaction.Deposit;
@@ -34,7 +34,7 @@ public class ServiceImplTest {
         UserService userService = new UserServiceImpl(userRepository);
         BankService bankService = new BankServiceImpl(bankRepository, userService);
 
-        var bank = new Bank();
+        var bank = new BankImpl();
 
         var user = new User();
         user.setPassportData("passort");
@@ -44,7 +44,7 @@ public class ServiceImplTest {
 
         var transaction = new Deposit();
         transaction.setAmount(50);
-        transaction.setAccountFrom(account.getId());
+        transaction.setAccountFrom(user.getId());
         bankRepository.create(bank);
         bankService.registerUser(user, bank);
 
@@ -62,7 +62,7 @@ public class ServiceImplTest {
         UserService userService = new UserServiceImpl(userRepository);
         BankService bankService = new BankServiceImpl(bankRepository, userService);
 
-        Bank bank = new Bank();
+        BankImpl bank = new BankImpl();
 
         var user = new User();
         var account = new Debit();
@@ -87,7 +87,7 @@ public class ServiceImplTest {
         UserService userService = new UserServiceImpl(userRepository);
         BankService bankService = new BankServiceImpl(bankRepository, userService);
 
-        Bank bank = new Bank();
+        BankImpl bank = new BankImpl();
 
         var user = new User();
         var account = new Debit();
@@ -108,7 +108,7 @@ public class ServiceImplTest {
 
         var random = new Random();
 
-        Bank bank = new Bank();
+        BankImpl bank = new BankImpl();
         bank.setId(random.nextLong());
 
         Assertions.assertEquals(null, bankRepository.getById(bank.getId()));
@@ -127,7 +127,7 @@ public class ServiceImplTest {
 
         var random = new Random();
 
-        var defaultBank = new Bank();
+        var defaultBank = new BankImpl();
         defaultBank.setId(1L);
         defaultBank.setCommission(4);
         defaultBank.setFixedInterest(6);

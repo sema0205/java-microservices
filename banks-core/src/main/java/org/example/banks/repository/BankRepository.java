@@ -1,11 +1,9 @@
 package org.example.banks.repository;
 
 import org.example.banks.domain.bank.Bank;
-import org.example.banks.domain.bank.IBank;
 import org.example.banks.domain.user.User;
 
 import java.util.HashMap;
-import java.util.List;
 
 public interface BankRepository {
     /**
@@ -14,7 +12,7 @@ public interface BankRepository {
      * @param id is bank id
      * @return bank entity
      */
-    IBank getById(
+    Bank getById(
             Long id
     );
 
@@ -24,8 +22,8 @@ public interface BankRepository {
      * @param bank entity
      * @return bank entity
      */
-    IBank update(
-            IBank bank
+    Bank update(
+            Bank bank
     );
 
     /**
@@ -34,8 +32,8 @@ public interface BankRepository {
      * @param bank entity
      * @return bank entity
      */
-    IBank create(
-            IBank bank
+    Bank create(
+            Bank bank
     );
 
     /**
@@ -58,7 +56,7 @@ public interface BankRepository {
      *
      * @return map of banks
      */
-    HashMap<Long, IBank> getAll();
+    HashMap<Long, Bank> getAll();
 
 }
 

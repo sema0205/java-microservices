@@ -2,10 +2,9 @@ package org.example.banks.commands;
 
 
 import lombok.AllArgsConstructor;
-import org.example.banks.domain.bank.Bank;
+import org.example.banks.domain.bank.BankImpl;
 import org.example.banks.domain.bank.Interest;
 import org.example.banks.service.CentralBankService;
-import org.example.banks.service.impl.CentralBankServiceImpl;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -23,11 +22,9 @@ public class CreateBankCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        var random = new Random();
         var scanner = new Scanner(System.in);
 
-        var bank = new Bank();
-        bank.setId((long) random.nextInt(1, 15));
+        var bank = new BankImpl();
 
         System.out.println("enter bank details:");
         System.out.print("commission: ");

@@ -1,7 +1,7 @@
 package org.example.banks.service;
 
-import org.example.banks.domain.account.IAccount;
-import org.example.banks.domain.transaction.ITransaction;
+import org.example.banks.domain.account.Account;
+import org.example.banks.domain.transaction.Transaction;
 import org.example.banks.domain.user.User;
 
 public interface UserService {
@@ -12,8 +12,8 @@ public interface UserService {
      * @param transaction entity
      * @return return account entity
      */
-    IAccount makeTransaction(
-            ITransaction transaction
+    Account makeTransaction(
+            Transaction transaction
     );
 
     /**

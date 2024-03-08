@@ -37,8 +37,6 @@ public class DepositCommand implements Callable<Integer> {
         System.out.print("enter money amount: ");
         var amount1 = scanner.nextLong();
 
-        tx.setId((long) random.nextInt(1, 25));
-        tx.setType(Type.DEPOSIT);
         tx.setAmount(amount1);
         tx.setDay(random.nextInt(1, 25));
         tx.setAccountFrom(userInfo.getId());

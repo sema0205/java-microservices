@@ -24,11 +24,9 @@ public class CreateUserCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        var random = new Random();
         var scanner = new Scanner(System.in);
 
         var user = new User();
-        user.setId((long) random.nextInt(1, 15));
 
         System.out.println("enter user details:");
         System.out.print("name: ");
@@ -48,7 +46,6 @@ public class CreateUserCommand implements Callable<Integer> {
         var bank = bankRepository.getById(bankId);
 
         var account = new Debit();
-        account.setId((long) random.nextInt(1, 15));
         user.setAccount(account);
 
         bankService.registerUser(user, bank);

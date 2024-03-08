@@ -38,8 +38,6 @@ public class WithdrawalCommand implements Callable<Integer> {
         System.out.print("enter money amount: ");
         var amount2 = scanner.nextLong();
 
-        tx.setId((long) random.nextInt(1, 25));
-        tx.setType(Type.WITHDRAWAL);
         tx.setAmount(amount2);
         tx.setDay(random.nextInt(1, 25));
         tx.setAccountFrom(userInfo.getId());

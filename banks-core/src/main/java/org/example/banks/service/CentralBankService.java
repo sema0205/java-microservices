@@ -1,9 +1,6 @@
 package org.example.banks.service;
 
 import org.example.banks.domain.bank.Bank;
-import org.example.banks.domain.bank.IBank;
-import org.example.banks.domain.bank.Notification;
-import org.example.banks.domain.user.User;
 
 public interface CentralBankService {
 
@@ -13,8 +10,8 @@ public interface CentralBankService {
      * @param bank entity
      * @return return bank entity
      */
-    IBank registerBank(
-            IBank bank
+    Bank registerBank(
+            Bank bank
     );
 
     /**

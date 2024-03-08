@@ -2,7 +2,6 @@ package org.example.banks.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.banks.domain.bank.Bank;
-import org.example.banks.domain.bank.IBank;
 import org.example.banks.domain.user.User;
 import org.example.banks.repository.BankRepository;
 
@@ -13,22 +12,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BankRepositoryImpl implements BankRepository {
 
-    private HashMap<Long, IBank> bankTable = new HashMap<>();
+    private HashMap<Long, Bank> bankTable = new HashMap<>();
 
-    public IBank getById(
+    public Bank getById(
             Long id
     ) {
         return bankTable.get(id);
     }
 
-    public IBank update(
-            IBank bank
+    public Bank update(
+            Bank bank
     ) {
         return bankTable.put(bank.getId(), bank);
     }
 
-    public IBank create(
-            IBank bank
+    public Bank create(
+            Bank bank
     ) {
         return bankTable.put(bank.getId(), bank);
     }
@@ -38,7 +37,7 @@ public class BankRepositoryImpl implements BankRepository {
     ) {
         User result = null;
 
-        for (Map.Entry<Long, IBank> entry : bankTable.entrySet()) {
+        for (Map.Entry<Long, Bank> entry : bankTable.entrySet()) {
             var bank = entry.getValue();
 
             if (bank.getUsers().get(userId) != null) {
@@ -51,7 +50,7 @@ public class BankRepositoryImpl implements BankRepository {
     }
 
     public void initCharge() {
-        for (Map.Entry<Long, IBank> entryBank : bankTable.entrySet()) {
+        for (Map.Entry<Long, Bank> entryBank : bankTable.entrySet()) {
             var bank = entryBank.getValue();
             var users = bank.getUsers();
 
@@ -63,7 +62,7 @@ public class BankRepositoryImpl implements BankRepository {
         }
     }
 
-    public HashMap<Long, IBank> getAll() {
+    public HashMap<Long, Bank> getAll() {
         return bankTable;
     }
 

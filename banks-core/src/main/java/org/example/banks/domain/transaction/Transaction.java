@@ -1,10 +1,10 @@
 package org.example.banks.domain.transaction;
 
-import org.example.banks.domain.account.IAccount;
+import org.example.banks.domain.account.Account;
 import org.example.banks.domain.account.Meta;
 import org.example.banks.domain.user.User;
 
-public interface ITransaction {
+public interface Transaction {
 
     void cancelTransaction();
 
@@ -22,7 +22,7 @@ public interface ITransaction {
 
     double handleRateFees(
             double currentBalance,
-            IAccount account
+            Account account
     );
 
     Long getSenderAccountId();
@@ -31,7 +31,7 @@ public interface ITransaction {
 
     double getTransactionAmount();
 
-    IAccount initTransaction(
+    Account initTransaction(
             User sender,
             User receiver
     );
