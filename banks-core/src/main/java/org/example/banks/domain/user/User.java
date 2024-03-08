@@ -7,18 +7,17 @@ import org.example.banks.domain.bank.Notification;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class User {
 
     public User() {
-        var rand = new Random();
-        id = (long) rand.nextInt(1, 150);
+        id = UUID.randomUUID();
     }
 
-    private Long id;
+    private UUID id;
 
     private String name;
     private String lastName;
@@ -46,7 +45,7 @@ public class User {
         notifications.add(notification);
     }
 
-    public boolean isFlagged(){
+    public boolean isFlagged() {
         return status == Status.FLAGGED;
     }
 

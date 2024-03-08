@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.banks.domain.transaction.Transaction;
 
+import java.util.UUID;
+
 
 /**
  * Meta info of transaction to store in account
@@ -12,7 +14,7 @@ import org.example.banks.domain.transaction.Transaction;
 @Setter
 public class Meta {
 
-    private Long id;
+    private UUID id;
 
     private Integer day;
 

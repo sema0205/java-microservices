@@ -9,6 +9,7 @@ import picocli.CommandLine;
 
 import java.util.Random;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 
@@ -26,9 +27,10 @@ public class TransferCommand implements Callable<Integer> {
         var scanner = new Scanner(System.in);
         System.out.print("enter user id to login: ");
 
-        var userInfo = userRepository.getById(scanner.nextLong());
 
-        System.out.printf("user id: %d\n", userInfo.getId());
+        var userInfo = userRepository.getById(UUID.fromString(scanner.nextLine()));
+
+        System.out.printf("user id: %s\n", userInfo.getId());
         System.out.printf("user balance: %f\n", userInfo.getAccount().getBalance());
         System.out.printf("user name: %s\n", userInfo.getName());
         System.out.printf("user status: %s\n", userInfo.getStatus());
@@ -39,12 +41,11 @@ public class TransferCommand implements Callable<Integer> {
         var amount3 = scanner.nextLong();
 
         System.out.print("enter account transfer id to: ");
-        var accountIdTo = scanner.nextLong();
 
         tx.setAmount(amount3);
         tx.setAccountFrom(userInfo.getId());
         tx.setDay(random.nextInt(1, 25));
-        tx.setAccountTo(accountIdTo);
+        tx.setAccountTo(UUID.fromString(scanner.next()));
 
         var account3 = userService.makeTransaction(tx);
 

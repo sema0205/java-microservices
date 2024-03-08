@@ -6,18 +6,17 @@ import org.example.banks.domain.account.Account;
 import org.example.banks.domain.account.Meta;
 import org.example.banks.domain.user.User;
 
-import java.util.Random;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class Withdrawal implements Transaction {
 
     public Withdrawal() {
-        var rand = new Random();
-        id = (long) rand.nextInt(1, 1000000);
+        id = UUID.randomUUID();
     }
 
-    private Long id;
+    private UUID id;
 
     private double amount;
 
@@ -25,19 +24,11 @@ public class Withdrawal implements Transaction {
     private Type type;
     private Status status = Status.VALID;
 
-    private Long accountFrom;
-    private Long accountTo;
+    private UUID accountFrom;
+    private UUID accountTo;
 
     public void cancelTransaction() {
         amount = -amount;
-        status = Status.CANCELLED;
-    }
-
-    public void setCancelStatus() {
-        status = Status.CANCELLED;
-    }
-
-    public void setFlagCancelled() {
         status = Status.CANCELLED;
     }
 
@@ -51,8 +42,7 @@ public class Withdrawal implements Transaction {
     }
 
     public void setRandomId() {
-        var rand = new Random();
-        id = (long) rand.nextInt(1, 1000000);
+        id = UUID.randomUUID();
     }
 
     public boolean isCancelled() {
@@ -64,12 +54,12 @@ public class Withdrawal implements Transaction {
         return currentBalance - amount;
     }
 
-    public Long getSenderAccountId() {
+    public UUID getSenderAccountId() {
         return accountFrom;
     }
 
 
-    public Long getReceiverAccountId() {
+    public UUID getReceiverAccountId() {
         return accountTo;
     }
 

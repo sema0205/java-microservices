@@ -5,21 +5,17 @@ import lombok.Setter;
 import org.example.banks.domain.bank.Bank;
 import org.example.banks.domain.transaction.Transaction;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Getter
 @Setter
 public class Debit implements Account {
 
     public Debit() {
-        var rand = new Random();
-        id = (long) rand.nextInt(1, 150);
+        id = UUID.randomUUID();
     }
 
-    private Long id;
+    private UUID id;
 
     private double balance;
 

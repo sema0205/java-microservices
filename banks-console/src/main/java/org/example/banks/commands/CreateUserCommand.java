@@ -10,6 +10,7 @@ import picocli.CommandLine;
 
 import java.util.Random;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(
@@ -42,8 +43,8 @@ public class CreateUserCommand implements Callable<Integer> {
         user.setPassportData(scanner.next());
 
         System.out.print("bank id: ");
-        var bankId = scanner.nextLong();
-        var bank = bankRepository.getById(bankId);
+        var bankId = scanner.nextLine();
+        var bank = bankRepository.getById(UUID.fromString(bankId));
 
         var account = new Debit();
         user.setAccount(account);

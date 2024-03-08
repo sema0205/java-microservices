@@ -13,11 +13,10 @@ import java.util.*;
 public class BankImpl implements Bank {
 
     public BankImpl() {
-        var rand = new Random();
-        id = (long) rand.nextInt(1, 150);
+        id = UUID.randomUUID();
     }
 
-    private Long id;
+    private UUID id;
 
     private double commission;
 
@@ -27,7 +26,7 @@ public class BankImpl implements Bank {
 
     private List<Interest> interest = new ArrayList<>();
 
-    private HashMap<Long, User> users = new HashMap<>();
+    private HashMap<UUID, User> users = new HashMap<>();
 
     private HashMap<Notification, List<User>> notifications = new HashMap<>();
 

@@ -7,15 +7,16 @@ import org.example.banks.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
-    private HashMap<Long, User> userTable = new HashMap<>();
+    private HashMap<UUID, User> userTable = new HashMap<>();
 
     public User getById(
-            Long id
+            UUID id
     ) {
         return userTable.get(id);
     }
@@ -35,11 +36,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     public User getAccountOwner(
-            Long accountId
+            UUID accountId
     ) {
         User result = null;
 
-        for (Map.Entry<Long, User> entry : userTable.entrySet()) {
+        for (Map.Entry<UUID, User> entry : userTable.entrySet()) {
             User user = entry.getValue();
             if (Objects.equals(user.getAccount().getId(), accountId)) {
                 result = user;
@@ -50,7 +51,7 @@ public class UserRepositoryImpl implements UserRepository {
         return result;
     }
 
-    public HashMap<Long, User> getAll() {
+    public HashMap<UUID, User> getAll() {
         return userTable;
     }
 

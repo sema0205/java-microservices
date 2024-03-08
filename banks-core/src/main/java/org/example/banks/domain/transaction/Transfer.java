@@ -7,17 +7,17 @@ import org.example.banks.domain.account.Meta;
 import org.example.banks.domain.user.User;
 
 import java.util.Random;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class Transfer implements Transaction {
 
     public Transfer() {
-        var rand = new Random();
-        id = (long) rand.nextInt(1, 1000000);
+        id = UUID.randomUUID();
     }
 
-    private Long id;
+    private UUID id;
 
     private double amount;
 
@@ -25,8 +25,8 @@ public class Transfer implements Transaction {
     private Type type;
     private Status status = Status.VALID;
 
-    private Long accountFrom;
-    private Long accountTo;
+    private UUID accountFrom;
+    private UUID accountTo;
 
     public void cancelTransaction() {
         var accountToSwap = accountTo;
@@ -44,14 +44,6 @@ public class Transfer implements Transaction {
         status = Status.CANCELLED;
     }
 
-    public void setSender(Long id) {
-        accountFrom = id;
-    }
-
-    public void setReceiver(Long id) {
-        accountTo = id;
-    }
-
     public Meta getMeta() {
         var meta = new Meta();
         meta.setId(id);
@@ -62,20 +54,19 @@ public class Transfer implements Transaction {
     }
 
     public void setRandomId() {
-        var rand = new Random();
-        id = (long) rand.nextInt(1, 1000000);
+        id = UUID.randomUUID();
     }
 
     public boolean isCancelled() {
         return status == Status.CANCELLED;
     }
 
-    public Long getSenderAccountId() {
+    public UUID getSenderAccountId() {
         return accountFrom;
     }
 
 
-    public Long getReceiverAccountId() {
+    public UUID getReceiverAccountId() {
         return accountTo;
     }
 

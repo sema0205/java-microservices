@@ -7,15 +7,16 @@ import org.example.banks.repository.BankRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 @RequiredArgsConstructor
 public class BankRepositoryImpl implements BankRepository {
 
-    private HashMap<Long, Bank> bankTable = new HashMap<>();
+    private HashMap<UUID, Bank> bankTable = new HashMap<>();
 
     public Bank getById(
-            Long id
+            UUID id
     ) {
         return bankTable.get(id);
     }
@@ -33,11 +34,11 @@ public class BankRepositoryImpl implements BankRepository {
     }
 
     public User getUserById(
-            Long userId
+            UUID userId
     ) {
         User result = null;
 
-        for (Map.Entry<Long, Bank> entry : bankTable.entrySet()) {
+        for (Map.Entry<UUID, Bank> entry : bankTable.entrySet()) {
             var bank = entry.getValue();
 
             if (bank.getUsers().get(userId) != null) {
@@ -50,11 +51,11 @@ public class BankRepositoryImpl implements BankRepository {
     }
 
     public void initCharge() {
-        for (Map.Entry<Long, Bank> entryBank : bankTable.entrySet()) {
+        for (Map.Entry<UUID, Bank> entryBank : bankTable.entrySet()) {
             var bank = entryBank.getValue();
             var users = bank.getUsers();
 
-            for (Map.Entry<Long, User> entryUser : users.entrySet()) {
+            for (Map.Entry<UUID, User> entryUser : users.entrySet()) {
                 var user = entryUser.getValue();
                 bank.handleAccrual(user.getAccount());
             }
@@ -62,7 +63,7 @@ public class BankRepositoryImpl implements BankRepository {
         }
     }
 
-    public HashMap<Long, Bank> getAll() {
+    public HashMap<UUID, Bank> getAll() {
         return bankTable;
     }
 

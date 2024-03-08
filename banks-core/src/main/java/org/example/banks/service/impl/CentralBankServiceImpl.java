@@ -7,6 +7,7 @@ import org.example.banks.repository.BankRepository;
 import org.example.banks.service.CentralBankService;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public class CentralBankServiceImpl implements CentralBankService {
 
     public void notifyUsers() {
         var banks = bankRepository.getAll();
-        for (Map.Entry<Long, Bank> entry : banks.entrySet()) {
+        for (Map.Entry<UUID, Bank> entry : banks.entrySet()) {
             var bank = entry.getValue();
             bank.notifyUsers();
         }

@@ -3,9 +3,11 @@ package org.example.banks.domain.account;
 import org.example.banks.domain.bank.Bank;
 import org.example.banks.domain.transaction.Transaction;
 
+import java.util.UUID;
+
 public interface Account {
 
-    Long getId();
+    UUID getId();
 
     double getBalance();
 

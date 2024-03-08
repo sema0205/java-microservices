@@ -4,13 +4,11 @@ import org.example.banks.domain.account.Account;
 import org.example.banks.domain.account.Meta;
 import org.example.banks.domain.user.User;
 
+import java.util.UUID;
+
 public interface Transaction {
 
     void cancelTransaction();
-
-    void setCancelStatus();
-
-    void setFlagCancelled();
 
     void setAmount(double txAmount);
 
@@ -25,9 +23,9 @@ public interface Transaction {
             Account account
     );
 
-    Long getSenderAccountId();
+    UUID getSenderAccountId();
 
-    Long getReceiverAccountId();
+    UUID getReceiverAccountId();
 
     double getTransactionAmount();
 

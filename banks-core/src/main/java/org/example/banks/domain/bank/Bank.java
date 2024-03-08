@@ -4,6 +4,7 @@ import org.example.banks.domain.account.Account;
 import org.example.banks.domain.user.User;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 
 public interface Bank {
@@ -23,7 +24,7 @@ public interface Bank {
             Account account
     );
 
-    Long getId();
+    UUID getId();
 
     double getCommission();
 
@@ -31,5 +32,5 @@ public interface Bank {
 
     double getCreditLimit();
 
-    HashMap<Long, User> getUsers();
+    HashMap<UUID, User> getUsers();
 }
