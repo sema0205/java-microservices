@@ -15,18 +15,15 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation(project(":lab2:dal"))
-    implementation(project(":lab2:controller"))
-    implementation(project(":lab2:service"))
-
-    implementation("jakarta.persistence:jakarta.persistence-api:2.2.3")
-
     implementation("joda-time:joda-time:2.3")
+    implementation("org.postgresql:postgresql:42.2.16")
 
-    implementation("org.hibernate:hibernate-core:5.4.30.Final")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 
-    testCompileOnly("org.mockito:mockito-all:1.9.5")
-    testCompileOnly("org.mockito:mockito-junit-jupiter:5.9.0")
+    implementation("jakarta.persistence:jakarta.persistence-api:3.0.0")
+    implementation("org.hibernate:hibernate-core:5.5.0.Final")
+
 }
 
 tasks.test {
