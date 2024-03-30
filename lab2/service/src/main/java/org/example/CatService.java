@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.Dto.CatDto;
 import org.example.model.Cat;
 import org.example.model.Owner;
 
@@ -7,16 +8,16 @@ import java.util.List;
 
 public interface CatService {
 
-    void create(Cat cat);
+    void create(CatDto catDto);
 
-    void changeOwner(Cat cat);
+    void changeOwner(long ownerId, long catId);
 
-    void addFriend(Cat ownerCat, Cat friendCat);
+    void addFriend(long ownerCatId, CatDto friendCatDto);
 
-    void delete(Cat cat);
+    void delete(long catId);
 
-    Cat getByName(String name);
+    CatDto getByName(String name);
 
-    List<Cat> getAll();
+    List<CatDto> getAll();
 
 }

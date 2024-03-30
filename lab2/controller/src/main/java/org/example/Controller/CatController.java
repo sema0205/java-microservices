@@ -17,43 +17,23 @@ public class CatController {
     private CatService catService;
 
     public void create(CatDto catDto) {
-        Cat cat = catDto.ToModel();
-        catService.create(cat);
+        catService.create(catDto);
     }
 
     public void delete(CatDto catDto) {
-        Cat cat = catDto.ToModel();
-        catService.delete(cat);
+        catService.delete(catDto.getId());
     }
 
-    public void changeOwner(CatDto catDto) {
-        Cat cat = catDto.ToModel();
-        catService.changeOwner(cat);
+    public void changeOwner(long ownerId, CatDto catDto) {
+        catService.changeOwner(ownerId, catDto.getId());
     }
 
-    public void addFriend(CatDto catOwnerDto, CatDto catFriendDto) {
-        Cat catOwner = catOwnerDto.ToModel();
-        Cat catFriend = catFriendDto.ToModel();
-        catService.addFriend(catOwner, catFriend);
+    public void addFriend(long ownerId, CatDto catFriendDto) {
+        catService.addFriend(ownerId, catFriendDto);
     }
 
     public List<CatDto> getAll() {
-        List<CatDto> catsDto = new ArrayList<>();
-
-        List<Cat> cats = catService.getAll();
-
-        for (Cat cat : cats) {
-            catsDto.add(new CatDto(
-                    cat.getName(),
-                    cat.getBirthDate(),
-                    cat.getBreed(),
-                    cat.getColor(),
-                    cat.getOwner(),
-                    cat.getFriends())
-            );
-        }
-
-        return catsDto;
+        return catService.getAll();
     }
 
 }

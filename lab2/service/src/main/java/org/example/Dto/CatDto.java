@@ -17,6 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 public class CatDto {
 
+    private long id;
+
     private String name;
     private DateTime birthDate;
 
@@ -26,19 +28,6 @@ public class CatDto {
     private Owner owner;
 
     private List<Cat> friends;
-
-    public Cat ToModel() {
-        Cat cat = new Cat();
-
-        cat.setName(name);
-        cat.setBirthDate(birthDate);
-        cat.setBreed(breed);
-        cat.setColor(color);
-        cat.setOwner(owner);
-        cat.setFriends(friends);
-
-        return cat;
-    }
 
 }
 

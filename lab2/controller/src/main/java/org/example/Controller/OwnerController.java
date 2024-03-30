@@ -16,31 +16,19 @@ public class OwnerController {
     private OwnerService ownerService;
 
     public void create(OwnerDto ownerDto) {
-        Owner owner = ownerDto.ToModel();
-        ownerService.create(owner);
+        ownerService.create(ownerDto);
     }
 
     public void delete(OwnerDto ownerDto) {
-        Owner owner = ownerDto.ToModel();
-        ownerService.delete(owner);
+        ownerService.delete(ownerDto.getId());
     }
 
-    public void addCat(OwnerDto ownerDto, CatDto catDto) {
-        Owner owner = ownerDto.ToModel();
-        Cat cat = catDto.ToModel();
-        ownerService.addCat(owner, cat);
+    public void addCat(long ownerId, CatDto catDto) {
+        ownerService.addCat(ownerId, catDto);
     }
 
     public List<OwnerDto> getAll() {
-        List<OwnerDto> ownersDto = new ArrayList<>();
-
-        List<Owner> owners = ownerService.getAll();
-
-        for (Owner owner : owners) {
-            ownersDto.add(new OwnerDto(owner.getName(), owner.getBirthDate(), owner.getCats()));
-        }
-
-        return ownersDto;
+        return ownerService.getAll();
     }
 
 }

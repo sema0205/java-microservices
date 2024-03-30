@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.model.Cat;
-import org.example.model.Owner;
 import org.joda.time.DateTime;
 
 import java.util.List;
@@ -14,19 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class OwnerDto {
 
+    private long id;
+
     private String name;
     private DateTime birthDate;
 
     private List<Cat> cats;
-
-    public Owner ToModel() {
-        Owner owner = new Owner();
-
-        owner.setName(name);
-        owner.setBirthDate(birthDate);
-        owner.setCats(cats);
-
-        return owner;
-    }
 
 }
