@@ -1,11 +1,9 @@
 package org.example.banks.repository;
 
-import org.example.banks.domain.account.Account;
-import org.example.banks.domain.bank.Bank;
-import org.example.banks.domain.transaction.Transaction;
 import org.example.banks.domain.user.User;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public interface UserRepository {
     /**
@@ -15,7 +13,7 @@ public interface UserRepository {
      * @return user entity
      */
     User getById(
-            Long id
+            UUID id
     );
 
     /**
@@ -45,17 +43,7 @@ public interface UserRepository {
      * @return user entity
      */
     User getAccountOwner(
-            Long accountId
-    );
-
-    /**
-     * init transaction in any type
-     *
-     * @param transaction is tx entity
-     * @return account entity
-     */
-    Account makeTransaction(
-            Transaction transaction
+            UUID accountId
     );
 
     /**
@@ -63,6 +51,6 @@ public interface UserRepository {
      *
      * @return map of users
      */
-    HashMap<Long, User> getAll();
+    HashMap<UUID, User> getAll();
 
 }

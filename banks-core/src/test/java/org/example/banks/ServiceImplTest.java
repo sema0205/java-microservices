@@ -1,13 +1,11 @@
 package org.example.banks;
 
 
-import org.example.banks.domain.account.Account;
-import org.example.banks.domain.account.Type;
-import org.example.banks.domain.bank.Bank;
+import org.example.banks.domain.account.Debit;
+import org.example.banks.domain.bank.BankImpl;
 import org.example.banks.domain.bank.Interest;
 import org.example.banks.domain.bank.Notification;
-import org.example.banks.domain.transaction.Status;
-import org.example.banks.domain.transaction.Transaction;
+import org.example.banks.domain.transaction.Deposit;
 import org.example.banks.domain.user.User;
 import org.example.banks.repository.BankRepository;
 import org.example.banks.repository.UserRepository;
@@ -23,7 +21,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 
@@ -32,25 +29,22 @@ public class ServiceImplTest {
     @Test
     void cancelTransaction() {
 
-        var bankRepository = new BankRepositoryImpl();
-        var userRepository = new UserRepositoryImpl();
-        var bankService = new BankServiceImpl(bankRepository, userRepository);
-        var userService = new UserServiceImpl(userRepository);
+        BankRepository bankRepository = new BankRepositoryImpl();
+        UserRepository userRepository = new UserRepositoryImpl();
+        UserService userService = new UserServiceImpl(userRepository);
+        BankService bankService = new BankServiceImpl(bankRepository, userService);
 
-        Bank bank = new Bank();
+        var bank = new BankImpl();
 
         var user = new User();
         user.setPassportData("passort");
         user.setAddress("address");
-        var account = new Account();
-        account.setType(Type.DEBIT);
+        var account = new Debit();
         user.setAccount(account);
 
-        var transaction = new Transaction();
-        transaction.setType(org.example.banks.domain.transaction.Type.DEPOSIT);
+        var transaction = new Deposit();
         transaction.setAmount(50);
-        transaction.setAccountFrom(account.getId());
-
+        transaction.setAccountFrom(user.getId());
         bankRepository.create(bank);
         bankService.registerUser(user, bank);
 
@@ -63,21 +57,22 @@ public class ServiceImplTest {
 
     @Test
     void addNotification() {
-        var bankRepository = new BankRepositoryImpl();
-        var userRepository = new UserRepositoryImpl();
-        var bankService = new BankServiceImpl(bankRepository, userRepository);
+        BankRepository bankRepository = new BankRepositoryImpl();
+        UserRepository userRepository = new UserRepositoryImpl();
+        UserService userService = new UserServiceImpl(userRepository);
+        BankService bankService = new BankServiceImpl(bankRepository, userService);
 
-        Bank bank = new Bank();
+        BankImpl bank = new BankImpl();
 
         var user = new User();
-        var account = new Account();
-        account.setType(Type.DEBIT);
+        var account = new Debit();
         user.setAccount(account);
 
         var notification = Notification.CREDIT_CARD_CHANGE;
 
         bankRepository.create(bank);
         bankService.registerUser(user, bank);
+
 
         Assertions.assertEquals(true, bank.getNotifications().isEmpty());
         bankService.addNotifyUser(notification, user, bank);
@@ -87,15 +82,15 @@ public class ServiceImplTest {
 
     @Test
     void registerUser() {
-        var bankRepository = new BankRepositoryImpl();
-        var userRepository = new UserRepositoryImpl();
-        var bankService = new BankServiceImpl(bankRepository, userRepository);
+        BankRepository bankRepository = new BankRepositoryImpl();
+        UserRepository userRepository = new UserRepositoryImpl();
+        UserService userService = new UserServiceImpl(userRepository);
+        BankService bankService = new BankServiceImpl(bankRepository, userService);
 
-        Bank bank = new Bank();
+        BankImpl bank = new BankImpl();
 
         var user = new User();
-        var account = new Account();
-        account.setType(Type.DEBIT);
+        var account = new Debit();
         user.setAccount(account);
 
         bankRepository.create(bank);
@@ -113,8 +108,7 @@ public class ServiceImplTest {
 
         var random = new Random();
 
-        Bank bank = new Bank();
-        bank.setId(random.nextLong());
+        BankImpl bank = new BankImpl();
 
         Assertions.assertEquals(null, bankRepository.getById(bank.getId()));
         centralBankService.registerBank(bank);
@@ -126,14 +120,11 @@ public class ServiceImplTest {
     void getFixedRate() {
         BankRepository bankRepository = new BankRepositoryImpl();
         UserRepository userRepository = new UserRepositoryImpl();
-        BankService bankService = new BankServiceImpl(bankRepository, userRepository);
         UserService userService = new UserServiceImpl(userRepository);
+        BankService bankService = new BankServiceImpl(bankRepository, userService);
         CentralBankService centralBankService = new CentralBankServiceImpl(bankRepository);
 
-        var random = new Random();
-
-        var defaultBank = new Bank();
-        defaultBank.setId(1L);
+        var defaultBank = new BankImpl();
         defaultBank.setCommission(4);
         defaultBank.setFixedInterest(6);
         defaultBank.setCreditLimit(50000);
@@ -147,66 +138,51 @@ public class ServiceImplTest {
         centralBankService.registerBank(defaultBank);
 
 
-        {
-            var user = new User();
-            user.setId(1L);
-            user.setName("lesha");
-            user.setLastName("vertov");
-            user.setAddress("lenina 23");
-            user.setPassportData("1324224");
-            var bank = bankRepository.getById(1L);
+        var user1 = new User();
+        user1.setName("lesha");
+        user1.setLastName("vertov");
+        user1.setAddress("lenina 23");
+        user1.setPassportData("1324224");
+        var bank = bankRepository.getById(defaultBank.getId());
 
-            var account = new Account();
-            account.setId((long) random.nextInt(1, 15));
-            account.setType(org.example.banks.domain.account.Type.DEBIT);
-            user.setAccount(account);
+        var account1 = new Debit();
+        user1.setAccount(account1);
 
-            bankService.registerUser(user, bank);
+        bankService.registerUser(user1, bank);
 
-            for (int i = 0; i < 70; i++) {
-                var tx = new Transaction();
-                tx.setId((long) random.nextInt(1, 50));
-                tx.setType(org.example.banks.domain.transaction.Type.DEPOSIT);
-                tx.setAmount(5);
-                tx.setDay(i);
-                tx.setAccountFrom(user.getId());
-                userService.makeTransaction(tx);
-            }
-
-        }
-
-        {
-            var user = new User();
-            user.setId(2L);
-            user.setName("vadim");
-            user.setLastName("petrov");
-            user.setAddress("pobeda 63");
-            user.setPassportData("4242");
-            var bank = bankRepository.getById(1L);
-
-            var account = new Account();
-            account.setId((long) random.nextInt(1, 15));
-            account.setType(org.example.banks.domain.account.Type.DEBIT);
-            user.setAccount(account);
-
-            bankService.registerUser(user, bank);
-
-            for (int i = 0; i < 60; i++) {
-                var tx = new Transaction();
-                tx.setId((long) random.nextInt(1, 50));
-                tx.setType(org.example.banks.domain.transaction.Type.DEPOSIT);
-                tx.setAmount(5);
-                tx.setDay(i);
-                tx.setAccountFrom(user.getId());
-                userService.makeTransaction(tx);
-            }
+        for (int i = 0; i < 70; i++) {
+            var tx = new Deposit();
+            tx.setAmount(5);
+            tx.setDay(i);
+            tx.setAccountFrom(user1.getId());
+            userService.makeTransaction(tx);
         }
 
 
-        Assertions.assertEquals(350, userRepository.getById(1L).getAccount().getBalance());
-        Assertions.assertEquals(300, userRepository.getById(2L).getAccount().getBalance());
+        var user2 = new User();
+        user2.setName("vadim");
+        user2.setLastName("petrov");
+        user2.setAddress("pobeda 63");
+        user2.setPassportData("4242");
+
+        var account2 = new Debit();
+        user2.setAccount(account2);
+
+        bankService.registerUser(user2, bank);
+
+        for (int i = 0; i < 60; i++) {
+            var tx = new Deposit();
+            tx.setAmount(5);
+            tx.setDay(i);
+            tx.setAccountFrom(user2.getId());
+            userService.makeTransaction(tx);
+        }
+
+
+        Assertions.assertEquals(350, userRepository.getById(user1.getId()).getAccount().getBalance());
+        Assertions.assertEquals(300, userRepository.getById(user2.getId()).getAccount().getBalance());
         centralBankService.notifyBanks();
-        Assertions.assertEquals(352, (int)userRepository.getById(1L).getAccount().getBalance());
-        Assertions.assertEquals(301, (int)userRepository.getById(2L).getAccount().getBalance());
+        Assertions.assertEquals(352, (int) userRepository.getById(user1.getId()).getAccount().getBalance());
+        Assertions.assertEquals(301, (int) userRepository.getById(user2.getId()).getAccount().getBalance());
     }
 }

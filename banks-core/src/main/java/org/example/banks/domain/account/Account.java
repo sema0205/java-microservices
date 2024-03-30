@@ -1,21 +1,37 @@
 package org.example.banks.domain.account;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.example.banks.domain.bank.Bank;
+import org.example.banks.domain.transaction.Transaction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
-@Getter
-@Setter
-public class Account {
+public interface Account {
 
-    private Long id;
+    UUID getId();
 
-    private double balance;
+    double getBalance();
 
-    private Type type = Type.DEBIT;
 
-    private List<Meta> transactions = new ArrayList<>();
+    void addTransaction(
+            Transaction transaction
+    );
+
+    void increaseBalance(
+            Transaction transaction
+    );
+
+    boolean decreaseBalance(
+            Transaction transaction
+    );
+
+    double handleRateFees(
+            double currentBalance,
+            Transaction transaction
+    );
+
+    void accrualFees(
+            Bank bank
+    );
 
 }
+

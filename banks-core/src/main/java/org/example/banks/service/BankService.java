@@ -54,13 +54,14 @@ public interface BankService {
      * add new notify for user
      *
      * @param notification notify type
-     * @param User user entity
+     * @param user user entity
      * @param bank bank entity
      * @return bank entity
      */
     Bank addNotifyUser(
             Notification notification,
-            User User,
+            User user,
             Bank bank
     );
+
 }

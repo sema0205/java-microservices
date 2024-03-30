@@ -18,4 +18,10 @@ public interface CentralBankService {
      * init starting paying to client, taking fees
      */
     void notifyBanks();
+
+
+    /**
+     * init notifying users
+     */
+    void notifyUsers();
 }

@@ -1,19 +1,37 @@
 package org.example.banks.domain.transaction;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.example.banks.domain.account.Account;
+import org.example.banks.domain.account.Meta;
+import org.example.banks.domain.user.User;
 
-@Getter
-@Setter
-public class Transaction {
-    private Long id;
+import java.util.UUID;
 
-    private double amount;
+public interface Transaction {
 
-    private Integer day;
-    private Type type;
-    private Status status = Status.VALID;
+    void cancelTransaction();
 
-    private Long accountFrom;
-    private Long accountTo;
+    void setAmount(double txAmount);
+
+    Meta getMeta();
+
+    void setRandomId();
+
+    boolean isCancelled();
+
+    double handleRateFees(
+            double currentBalance,
+            Account account
+    );
+
+    UUID getSenderAccountId();
+
+    UUID getReceiverAccountId();
+
+    double getTransactionAmount();
+
+    Account initTransaction(
+            User sender,
+            User receiver
+    );
+
 }

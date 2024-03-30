@@ -1,29 +1,36 @@
 package org.example.banks.domain.bank;
 
-
-import lombok.Getter;
-import lombok.Setter;
+import org.example.banks.domain.account.Account;
 import org.example.banks.domain.user.User;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.UUID;
 
-@Getter
-@Setter
-public class Bank {
 
-    private Long id;
+public interface Bank {
 
-    private double commission;
+    void addNotifyUser(
+            Notification notification,
+            User user
+    );
 
-    private double fixedInterest;
+    double findSuiteInterestRate(
+            double amount
+    );
 
-    private double creditLimit;
+    void notifyUsers();
 
-    private List<Interest> interest = new ArrayList<>();
+    void handleAccrual(
+            Account account
+    );
 
-    private HashMap<Long, User> users = new HashMap<>();
+    UUID getId();
 
-    private HashMap<Notification, List<User>> notifications = new HashMap<>();
+    double getCommission();
+
+    double getFixedInterest();
+
+    double getCreditLimit();
+
+    HashMap<UUID, User> getUsers();
 }

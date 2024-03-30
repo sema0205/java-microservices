@@ -4,7 +4,7 @@ import org.example.banks.domain.bank.Bank;
 import org.example.banks.domain.user.User;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.UUID;
 
 public interface BankRepository {
     /**
@@ -14,7 +14,7 @@ public interface BankRepository {
      * @return bank entity
      */
     Bank getById(
-            Long id
+            UUID id
     );
 
     /**
@@ -44,7 +44,7 @@ public interface BankRepository {
      * @return user entity
      */
     User getUserById(
-            Long userId
+            UUID userId
     );
 
     /**
@@ -57,7 +57,7 @@ public interface BankRepository {
      *
      * @return map of banks
      */
-    HashMap<Long, Bank> getAll();
+    HashMap<UUID, Bank> getAll();
 
 }
 
