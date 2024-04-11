@@ -1,28 +1,33 @@
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import org.example.Dto.OwnerDto;
 import org.example.OwnerService;
+import org.example.cat.Breed;
+import org.example.cat.Cat;
+import org.example.cat.Color;
+import org.example.dao.CatDao;
 import org.example.dao.OwnerDao;
+import org.example.dto.CatDto;
+import org.example.dto.OwnerDto;
 import org.example.impl.OwnerServiceImpl;
-import org.example.mapper.CatMapper;
-import org.example.model.Breed;
-import org.example.model.Cat;
-import org.example.model.Owner;
-import org.hibernate.Session;
-import org.joda.time.DateTime;
+import org.example.mappers.CatMapper;
+import org.example.mappers.CatMapperImpl;
+import org.example.mappers.OwnerMapper;
+import org.example.mappers.OwnerMapperImpl;
+import org.example.owner.Owner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class OwnerServiceTest {
 
-    private OwnerDao ownerDao = mock(OwnerDao.class);
+    private final OwnerDao ownerDao = mock(OwnerDao.class);
+    private final CatDao catDao = mock(CatDao.class);
+    private final CatMapper catMapper = new CatMapperImpl();
+    private final OwnerMapper ownerMapper = new OwnerMapperImpl();
 
     @Test
     public void addCatShouldAddCatToOwnerAndSaveUpdatedOwner() {
@@ -30,24 +35,31 @@ public class OwnerServiceTest {
         Owner owner = new Owner();
 
         String ownerName = "Lesha";
-        owner.setId(1);
+        owner.setId(1L);
         owner.setName(ownerName);
-        owner.setBirthDate(DateTime.parse("2000-06-15"));
+        owner.setCats(new ArrayList<>());
+        owner.setBirthDate(LocalDateTime.parse("2000-06-15T00:00"));
 
         Cat cat = new Cat();
+        cat.setId(1L);
         cat.setName("Barsik");
-        cat.setBirthDate(DateTime.parse("2020-01-25"));
+        cat.setFriends(new ArrayList<>());
+        cat.setBirthDate(LocalDateTime.parse("2020-01-25T00:00"));
         cat.setBreed(Breed.MAINE_COON);
-        cat.setColor(Color.gray);
+        cat.setColor(Color.GRAY);
 
-        OwnerService ownerService = new OwnerServiceImpl(ownerDao);
+        CatDto catDto = catMapper.toDto(cat);
 
-        when(ownerDao.getById(owner.getId())).thenReturn(owner);
+        OwnerService ownerService = new OwnerServiceImpl(ownerDao, catDao, ownerMapper, catMapper);
 
-        ownerService.addCat(owner.getId(), CatMapper.CatModelToDto(cat));
+        when(ownerDao.findById(owner.getId())).thenReturn(Optional.of(owner));
+        when(catDao.findById(cat.getId())).thenReturn(Optional.of(cat));
+        when(ownerDao.save(owner)).thenReturn(owner);
+
+        ownerService.addCat(owner.getId(), catDto.getId());
 
         Assertions.assertTrue(owner.getCats().contains(cat));
-        verify(ownerDao).update(owner);
+        verify(ownerDao).save(owner);
     }
 
     @Test
@@ -56,25 +68,19 @@ public class OwnerServiceTest {
         Owner owner = new Owner();
 
         String ownerName = "Lesha";
-        owner.setId(1);
+        owner.setId(1L);
         owner.setName(ownerName);
-        owner.setBirthDate(DateTime.parse("2000-06-15"));
+        owner.setBirthDate(LocalDateTime.parse("2000-06-15T00:00"));
 
-        Cat cat = new Cat();
-        cat.setName("Barsik");
-        cat.setBirthDate(DateTime.parse("2020-01-25"));
-        cat.setBreed(Breed.MAINE_COON);
-        cat.setColor(Color.gray);
+        OwnerService ownerService = new OwnerServiceImpl(ownerDao, catDao, ownerMapper, catMapper);
 
-        OwnerService ownerService = new OwnerServiceImpl(ownerDao);
-
-        when(ownerDao.getById(owner.getId())).thenReturn(owner);
+        when(ownerDao.findById(owner.getId())).thenReturn(Optional.of(owner));
         ownerService.delete(owner.getId());
 
-        verify(ownerDao).delete(owner);
+        verify(ownerDao).deleteById(owner.getId());
 
-        OwnerDto deletedOwner = ownerService.getByName(owner.getName());
-        assertNull(deletedOwner);
+        OwnerDto deletedOwner = ownerService.getById(owner.getId());
+        assertEquals(owner.getId(), deletedOwner.getId());
     }
 
 
