@@ -22,9 +22,7 @@ public class Owner {
 
     private LocalDateTime birthDate;
 
-    @Column(name = "cat")
-    @CollectionTable(name = "cat_owner_item")
-    @ElementCollection(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Cat> cats;
 
 }

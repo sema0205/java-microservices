@@ -1,20 +1,27 @@
-insert into users (name, username, password)
-values ('John Doe', 'johndoe@gmail.com', '$2a$10$Xl0yhvzLIaJCDdKBS0Lld.ksK7c2Zytg/ZKFdtIYYQUv8rUfvCR4W'),
-       ('Mike Smith', 'mikesmith@yahoo.com', '$2a$10$fFLij9aYgaNCFPTL9WcA/uoCRukxnwf.vOQ8nrEEOskrCNmGsxY7m');
+INSERT INTO owner (name, birthdate)
+VALUES ('John Doe', '1975-07-20 08:00:00+00'),
+       ('Alice Johnson', '1981-03-10 08:00:00+00'),
+       ('Robert Smith', '1990-11-15 08:00:00+00'),
+       ('Patricia Brown', '1985-06-05 08:00:00+00'),
+       ('Jennifer Garcia', '1992-12-25 08:00:00+00');
 
-insert into tasks (title, description, status, expiration_date)
-values ('Buy cheese', null, 'TODO', '2023-01-29 12:00:00'),
-       ('Do homework', 'Math, Physics, Literature', 'IN_PROGRESS', '2023-01-31 00:00:00'),
-       ('Clean rooms', null, 'DONE', null),
-       ('Call Mike', 'Ask about meeting', 'TODO', '2023-02-01 00:00:00');
+INSERT INTO cat (name, birthdate, breed, color)
+VALUES ('Whiskers', '2018-03-01 08:00:00+00', 'SIAMESE', 'WHITE'),
+       ('Shadow', '2019-07-15 08:00:00+00', 'MAINE_COON', 'BLACK'),
+       ('Misty', '2017-06-09 08:00:00+00', 'PERSIAN', 'GRAY'),
+       ('Oscar', '2020-01-25 08:00:00+00', 'SPHINX', 'RED'),
+       ('Luna', '2018-11-05 08:00:00+00', 'MAINE_COON', 'BLUE');
 
-insert into users_tasks (task_id, user_id)
-values (1, 2),
+INSERT INTO cat_owner_item (owner_id, cat_id)
+VALUES (1, 1),
        (2, 2),
-       (3, 2),
-       (4, 1);
+       (3, 3),
+       (4, 4),
+       (5, 5);
 
-insert into users_roles (user_id, role)
-values (1, 'ROLE_ADMIN'),
-       (1, 'ROLE_USER'),
-       (2, 'ROLE_USER');
+INSERT INTO cat_friend_item (cat_id, friend_cat_id)
+VALUES (1, 2),
+       (1, 3),
+       (2, 3),
+       (2, 4),
+       (3, 5);

@@ -29,11 +29,15 @@ public class Cat {
     private Color color;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
     private Owner owner;
 
-    @Column(name = "cat")
-    @CollectionTable(name = "cat_friend_item")
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "cat_friend_item",
+            joinColumns = @JoinColumn(name = "cat_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_cat_id")
+    )
     private List<Cat> friends;
 
 }

@@ -2,7 +2,6 @@ plugins {
     id("java")
     id("io.freefair.lombok") version "8.6"
     id("org.hibernate.orm") version "6.2.0.CR3"
-    id("org.springframework.boot") version "3.2.4"
 }
 
 group = "org.example"

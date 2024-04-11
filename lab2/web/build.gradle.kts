@@ -25,7 +25,7 @@ dependencies {
 
     implementation("org.springframework.security:spring-security-core:6.2.3")
     implementation("org.springframework.boot:spring-boot-starter-validation:2.4.0")
-    implementation("org.hibernate:hibernate-core:5.4.30.Final")
+    implementation("org.hibernate:hibernate-core:6.2.6.Final")
     implementation("org.springframework.boot:spring-boot-starter-graphql:2.7.0")
 }
 
