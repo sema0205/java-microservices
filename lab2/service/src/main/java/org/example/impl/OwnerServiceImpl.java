@@ -1,12 +1,10 @@
 package org.example.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.CatService;
 import org.example.OwnerService;
 import org.example.cat.Cat;
 import org.example.dao.CatDao;
 import org.example.dao.OwnerDao;
-import org.example.dto.CatDto;
 import org.example.dto.OwnerDto;
 import org.example.exception.ResourceNotFoundException;
 import org.example.mappers.CatMapper;
@@ -15,8 +13,10 @@ import org.example.owner.Owner;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -61,7 +61,7 @@ public class OwnerServiceImpl implements OwnerService {
 
         existing.setName(owner.getName());
         existing.setBirthDate(owner.getBirthDate());
-        existing.setCats(catMapper.toModel(owner.getCats()));
+        existing.setCatIds(owner.getCatIds());
 
         Owner ownerResult = ownerDao.save(existing);
         return ownerMapper.toDto(ownerResult);
@@ -92,10 +92,10 @@ public class OwnerServiceImpl implements OwnerService {
         Owner existing = ownerDao.findById(ownerId).orElseThrow(() -> new ResourceNotFoundException("Owner not found."));
         Cat cat = catDao.findById(catId).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
 
-        existing.getCats().add(cat);
 
-        Owner ownerResult = ownerDao.save(existing);
-        return ownerMapper.toDto(ownerResult);
+        ownerDao.addCat(ownerId, catId);
+        Owner result = ownerDao.findById(ownerId).orElseThrow(() -> new ResourceNotFoundException("Owner not found."));
+        return ownerMapper.toDto(result);
     }
 
     @Override
@@ -111,16 +111,21 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    @Cacheable(
-            value = "OwnerService::getAllByBirthDateRange",
-            key = "#duration"
-    )
+    @Caching(cacheable = {
+            @Cacheable(
+                    value = "OwnerService::getAllByBirthDateRange",
+                    key = "#start"
+            ),
+            @Cacheable(
+                    value = "OwnerService::getAllByBirthDateRange",
+                    key = "#end"
+            )
+    })
     public List<OwnerDto> getAllByBirthDateRange(
-            final Duration duration
+            final Timestamp start,
+            final Timestamp end
     ) {
-        LocalDateTime now = LocalDateTime.now();
-        List<Owner> owners = ownerDao.getAllByBirthDateRange(Timestamp.valueOf(now),
-                Timestamp.valueOf(now.plus(duration)));
+        List<Owner> owners = ownerDao.getAllByBirthDateRange(start, end);
 
         return ownerMapper.toDto(owners);
     }

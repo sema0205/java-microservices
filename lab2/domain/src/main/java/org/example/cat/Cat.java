@@ -1,5 +1,6 @@
 package org.example.cat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -20,6 +21,8 @@ public class Cat {
     private long id;
 
     private String name;
+
+    @Column(name = "birthdate")
     private LocalDateTime birthDate;
 
     @Enumerated(value = EnumType.STRING)
@@ -29,15 +32,19 @@ public class Cat {
     private Color color;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id")
+    @JoinTable(
+            name = "cat_owner_item",
+            joinColumns = @JoinColumn(name = "cat_id"),
+            inverseJoinColumns = @JoinColumn(name = "owner_id")
+    )
     private Owner owner;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
+    @ElementCollection
+    @CollectionTable(
             name = "cat_friend_item",
-            joinColumns = @JoinColumn(name = "cat_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_cat_id")
+            joinColumns = @JoinColumn(name = "cat_id")
     )
-    private List<Cat> friends;
+    @Column(name = "friend_cat_id")
+    private List<Long> friendIds;
 
 }

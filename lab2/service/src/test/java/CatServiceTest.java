@@ -29,7 +29,7 @@ public class CatServiceTest {
         Cat ownerCat = new Cat();
         ownerCat.setId(1L);
         ownerCat.setName(ownerCatName);
-        ownerCat.setFriends(new ArrayList<>());
+        ownerCat.setFriendIds(new ArrayList<>());
         ownerCat.setBirthDate(LocalDateTime.parse("2020-01-25T00:00"));
         ownerCat.setBreed(Breed.MAINE_COON);
         ownerCat.setColor(org.example.cat.Color.GRAY);
@@ -37,7 +37,7 @@ public class CatServiceTest {
         CatDto friendCat = new CatDto();
         friendCat.setId(2L);
         friendCat.setName("Mursic");
-        friendCat.setFriends(new ArrayList<>());
+        friendCat.setFriendIds(new ArrayList<>());
         friendCat.setBirthDate(LocalDateTime.parse("2020-01-25T00:00"));
         friendCat.setBreed(Breed.SIAMESE);
         friendCat.setColor(org.example.cat.Color.BLACK);
@@ -53,11 +53,7 @@ public class CatServiceTest {
 
         catService.addFriend(ownerCat.getId(), friendCatModel.getId());
 
-        Assertions.assertTrue(ownerCat.getFriends().contains(friendCatModel));
-
-        verify(catDao).findById(ownerCat.getId());
-        verify(catDao).findById(friendCat.getId());
-        verify(catDao).save(ownerCat);
+        verify(catDao).addFriend(ownerCat.getId(), friendCatModel.getId());
     }
 
     @Test

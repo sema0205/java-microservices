@@ -1,5 +1,6 @@
 package org.example.owner;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +21,15 @@ public class Owner {
 
     private String name;
 
+    @Column(name = "birthdate")
     private LocalDateTime birthDate;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    private List<Cat> cats;
+    @ElementCollection
+    @CollectionTable(
+            name = "cat_owner_item",
+            joinColumns = @JoinColumn(name = "owner_id")
+    )
+    @Column(name = "cat_id")
+    private List<Long> CatIds;
 
 }

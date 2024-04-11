@@ -55,7 +55,7 @@ public class CatServiceImpl implements CatService {
         existing.setBirthDate(cat.getBirthDate());
         existing.setBreed(cat.getBreed());
         existing.setColor(cat.getColor());
-        existing.setFriends(catMapper.toModel(cat.getFriends()));
+        existing.setFriendIds(cat.getFriendIds());
 
         Cat catResult = catDao.save(existing);
         return catMapper.toDto(catResult);
@@ -94,10 +94,9 @@ public class CatServiceImpl implements CatService {
         Cat existing = catDao.findById(catId).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
         Cat friend = catDao.findById(friendId).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
 
-        existing.getFriends().add(friend);
-
-        Cat catResult = catDao.save(existing);
-        return catMapper.toDto(catResult);
+        catDao.addFriend(catId, friendId);
+        Cat result = catDao.findById(catId).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
+        return catMapper.toDto(result);
     }
 
     @Override
@@ -109,7 +108,7 @@ public class CatServiceImpl implements CatService {
             final Long id
     ) {
         return catMapper.toDto(catDao.findById(id).orElseThrow(() ->
-                        new ResourceNotFoundException("Cat not found.")));
+                new ResourceNotFoundException("Cat not found.")));
     }
 
     @Override
@@ -120,7 +119,7 @@ public class CatServiceImpl implements CatService {
     public List<CatDto> getAllByColor(
             final Color color
     ) {
-        List<Cat> cats = catDao.getAllByColor(color);
+        List<Cat> cats = catDao.getAllByColor(color.toString());
         return catMapper.toDto(cats);
     }
 

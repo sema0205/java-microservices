@@ -26,6 +26,6 @@ public class CatDto {
 
     private Owner owner;
 
-    private List<CatDto> friends;
+    private List<Long> friendIds;
 
 }

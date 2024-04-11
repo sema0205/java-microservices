@@ -4,6 +4,7 @@ import org.example.cat.Cat;
 import org.example.cat.Color;
 import org.example.owner.Owner;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,6 +21,18 @@ public interface OwnerDao extends JpaRepository<Owner, Long> {
     List<Owner> getAllByBirthDateRange(
             @Param("start") Timestamp start,
             @Param("end") Timestamp end
+    );
+
+
+    @Modifying
+    @Query(value = """
+            INSERT INTO cat_owner_item
+            (owner_id, cat_id)
+            VALUES (:ownerId, :catId)
+            """, nativeQuery = true)
+    void addCat(
+            @Param("ownerId") Long ownerId,
+            @Param("catId") Long catId
     );
 
 }

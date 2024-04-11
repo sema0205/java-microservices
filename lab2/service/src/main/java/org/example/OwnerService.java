@@ -1,7 +1,9 @@
 package org.example;
 
 import org.example.dto.OwnerDto;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.List;
 
@@ -29,7 +31,8 @@ public interface OwnerService {
     );
 
     List<OwnerDto> getAllByBirthDateRange(
-            Duration duration
+            Timestamp start,
+            Timestamp end
     );
 
     List<OwnerDto> getAll();

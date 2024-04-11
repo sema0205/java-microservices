@@ -24,6 +24,7 @@ dependencies {
 
     implementation("jakarta.persistence:jakarta.persistence-api:3.0.0")
     implementation("org.springframework.data:spring-data-jpa:3.2.4")
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.16.1")
 }
 
 tasks.test {

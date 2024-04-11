@@ -37,13 +37,13 @@ public class OwnerServiceTest {
         String ownerName = "Lesha";
         owner.setId(1L);
         owner.setName(ownerName);
-        owner.setCats(new ArrayList<>());
+        owner.setCatIds(new ArrayList<>());
         owner.setBirthDate(LocalDateTime.parse("2000-06-15T00:00"));
 
         Cat cat = new Cat();
         cat.setId(1L);
         cat.setName("Barsik");
-        cat.setFriends(new ArrayList<>());
+        cat.setFriendIds(new ArrayList<>());
         cat.setBirthDate(LocalDateTime.parse("2020-01-25T00:00"));
         cat.setBreed(Breed.MAINE_COON);
         cat.setColor(Color.GRAY);
@@ -58,8 +58,7 @@ public class OwnerServiceTest {
 
         ownerService.addCat(owner.getId(), catDto.getId());
 
-        Assertions.assertTrue(owner.getCats().contains(cat));
-        verify(ownerDao).save(owner);
+        verify(ownerDao).addCat(owner.getId(), catDto.getId());
     }
 
     @Test

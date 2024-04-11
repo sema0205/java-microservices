@@ -1,11 +1,12 @@
-package controller;
+package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.OwnerService;
 import org.example.dto.OwnerDto;
-import org.springframework.graphql.data.method.annotation.Argument;
+import org.example.dto.TimeRangeRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.List;
 
@@ -18,21 +19,21 @@ public class OwnerController {
 
     @PutMapping
     public OwnerDto update(
-            @RequestBody @Argument final OwnerDto dto
+            @RequestBody final OwnerDto dto
     ) {
         return ownerService.update(dto);
     }
 
     @GetMapping("/{id}")
     public OwnerDto getById(
-            @PathVariable @Argument final Long id
+            @PathVariable final Long id
     ) {
         return ownerService.getById(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(
-            @PathVariable @Argument final Long id
+            @PathVariable final Long id
     ) {
         ownerService.delete(id);
     }
@@ -46,8 +47,8 @@ public class OwnerController {
 
     @PostMapping("/{id}/cat/add")
     public OwnerDto addCat(
-            @PathVariable @Argument final Long id,
-            @RequestBody @Argument final Long catId
+            @PathVariable final Long id,
+            @RequestBody final Long catId
     ) {
         return ownerService.addCat(id, catId);
     }
@@ -59,9 +60,9 @@ public class OwnerController {
 
     @GetMapping("/birthdate")
     public List<OwnerDto> getAllByBirthDateRange(
-            @RequestBody @Argument final Duration duration
+            @RequestBody final TimeRangeRequest range
     ) {
-        return ownerService.getAllByBirthDateRange(duration);
+        return ownerService.getAllByBirthDateRange(range.getStart(), range.getEnd());
     }
 
 }

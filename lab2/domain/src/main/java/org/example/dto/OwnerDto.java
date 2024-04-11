@@ -16,6 +16,6 @@ public class OwnerDto {
 
     private LocalDateTime birthDate;
 
-    private List<CatDto> cats;
+    private List<Long> catIds;
 
 }
