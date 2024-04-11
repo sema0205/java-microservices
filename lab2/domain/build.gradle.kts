@@ -29,3 +29,13 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks {
+    getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+        isEnabled = false
+    }
+
+    getByName<org.gradle.jvm.tasks.Jar>("jar") {
+        enabled = true
+    }
+}

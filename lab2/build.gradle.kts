@@ -1,7 +1,6 @@
 plugins {
     id("java")
     id("org.springframework.boot") version "3.2.4"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
 
 group = "com.example"
@@ -12,6 +11,10 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":lab2:domain"))
+    implementation(project(":lab2:service"))
+    implementation(project(":lab2:dal"))
+
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc:3.2.2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.2.4")
     implementation("org.springframework.boot:spring-boot-starter-web:3.2.4")
@@ -42,4 +45,13 @@ dependencies {
     implementation("org.springframework:spring-tx:6.1.3")
 }
 
+tasks {
+    getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+        isEnabled = false
+    }
+
+    getByName<org.gradle.jvm.tasks.Jar>("jar") {
+        enabled = true
+    }
+}
 
