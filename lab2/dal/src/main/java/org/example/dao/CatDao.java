@@ -20,6 +20,8 @@ public interface CatDao extends JpaRepository<Cat, Long> {
             @Param("color") String color
     );
 
+    List<Cat> findDistinctByColor(Color color);
+
     @Modifying
     @Query(value = """
             INSERT INTO cat_friend_item

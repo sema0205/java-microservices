@@ -25,6 +25,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail:3.2.2")
     implementation("org.springframework.boot:spring-boot-starter-freemarker:3.2.2")
 
+    implementation("org.springframework.boot:spring-boot-test:3.2.2")
+    implementation("org.springframework.boot:spring-boot-test-autoconfigure:3.2.2")
+    implementation("org.springframework:spring-test:6.1.3")
+
+    implementation("junit:junit:4.13.1")
+
     runtimeOnly("org.postgresql:postgresql:42.7.1")
 
     compileOnly("org.projectlombok:lombok:1.18.30")
@@ -43,6 +49,9 @@ dependencies {
     implementation("org.springframework:spring-web:6.1.5")
     implementation("org.springframework.security:spring-security-core:6.2.3")
     implementation("org.springframework:spring-tx:6.1.3")
+
+    testImplementation("com.h2database:h2:1.4.200")
+    implementation("org.postgresql:postgresql:42.2.16")
 }
 
 tasks {

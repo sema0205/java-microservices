@@ -36,31 +36,30 @@ public class CatController {
         catService.delete(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public CatDto create(
             @RequestBody final CatDto CatDto
     ) {
         return catService.create(CatDto);
     }
 
-    @PostMapping("/{id}/friend/add")
+    @PostMapping("/{id}")
     public CatDto addCat(
             @PathVariable final Long id,
-            @RequestBody final Long friendId
+            @RequestParam Long friendId
     ) {
         return catService.addFriend(id, friendId);
     }
 
-    @GetMapping("/all")
-    public List<CatDto> getAll() {
-        return catService.getAll();
-    }
-
-    @GetMapping("/color")
-    public List<CatDto> getAllByBirthDateRange(
-            @RequestBody final Color color
+    @GetMapping
+    public List<CatDto> getAll(
+            @RequestParam(required = false) Color color
     ) {
-        return catService.getAllByColor(color);
+        if (color != null) {
+            return catService.getAllByColor(color);
+        }
+
+        return catService.getAll();
     }
 
 }

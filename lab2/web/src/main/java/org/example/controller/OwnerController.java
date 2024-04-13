@@ -2,6 +2,7 @@ package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.OwnerService;
+import org.example.cat.Color;
 import org.example.dto.OwnerDto;
 import org.example.dto.TimeRangeRequest;
 import org.springframework.web.bind.annotation.*;
@@ -38,31 +39,30 @@ public class OwnerController {
         ownerService.delete(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public OwnerDto create(
             @RequestBody final OwnerDto ownerDto
     ) {
         return ownerService.create(ownerDto);
     }
 
-    @PostMapping("/{id}/cat/add")
+    @PostMapping("/{id}")
     public OwnerDto addCat(
             @PathVariable final Long id,
-            @RequestBody final Long catId
+            @RequestParam Long catId
     ) {
         return ownerService.addCat(id, catId);
     }
 
-    @GetMapping("/all")
-    public List<OwnerDto> getAll() {
-        return ownerService.getAll();
-    }
-
-    @GetMapping("/birthdate")
-    public List<OwnerDto> getAllByBirthDateRange(
-            @RequestBody final TimeRangeRequest range
+    @GetMapping
+    public List<OwnerDto> getAll(
+            @RequestParam(required = false) TimeRangeRequest range
     ) {
-        return ownerService.getAllByBirthDateRange(range.getStart(), range.getEnd());
+        if (range != null) {
+            ownerService.getAllByBirthDateRange(range.getStart(), range.getEnd());
+        }
+
+        return ownerService.getAll();
     }
 
 }
