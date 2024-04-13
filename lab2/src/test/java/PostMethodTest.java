@@ -92,39 +92,6 @@ public class PostMethodTest {
                                 .content(ow.writeValueAsString(secondCat)))
                 .andDo(print())
                 .andExpect(status().isOk());
-
-
-//        var secondImportItem = new ShopUnitImportRequest(
-//                List.of(
-//                        new ShopUnitImport(
-//                                id,
-//                                "тестовое имя по-русски",
-//                                null,
-//                                ShopUnitType.OFFER,
-//                                1L
-//                        )
-//                ),
-//                "2024-01-04T21:00:00.529Z"
-//        );
-//
-//        this.mockMvc.perform(
-//                        post("/imports")
-//                                .contentType(APPLICATION_JSON_UTF8)
-//                                .content(ow.writeValueAsString(secondImportItem)))
-//                .andDo(print())
-//                .andExpect(status().isOk());
-//
-//        this.mockMvc.perform(
-//                        get("/nodes/" + id))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.date", is("2024-01-04T21:00:00.529Z")));
-//
-//        this.mockMvc.perform(
-//                        get("/nodes/" + id))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.date", is("2024-01-05T21:00:00.000Z")));
     }
 
 }
