@@ -1,61 +1,142 @@
 package org.example.impl;
 
-import lombok.AllArgsConstructor;
-import org.example.Dto.CatDto;
-import org.example.Dto.OwnerDto;
+import lombok.RequiredArgsConstructor;
 import org.example.OwnerService;
+import org.example.cat.Cat;
 import org.example.dao.CatDao;
 import org.example.dao.OwnerDao;
-import org.example.mapper.CatMapper;
-import org.example.mapper.OwnerMapper;
-import org.example.model.Cat;
-import org.example.model.Owner;
+import org.example.dto.OwnerDto;
+import org.example.exception.ResourceNotFoundException;
+import org.example.mappers.CatMapper;
+import org.example.mappers.OwnerMapper;
+import org.example.owner.Owner;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
-@AllArgsConstructor
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class OwnerServiceImpl implements OwnerService {
 
-    private OwnerDao ownerDao;
+    private final OwnerDao ownerDao;
+    private final CatDao catDao;
+    private final OwnerMapper ownerMapper;
+    private final CatMapper catMapper;
 
-    @Override
-    public void create(OwnerDto ownerDto) {
-        Owner owner = OwnerMapper.OwnerDtoToModel(ownerDto);
-
-        ownerDao.create(owner);
+    @Transactional
+    @Cacheable(
+            value = "OwnerService::getById",
+            condition = "#owner.id!=null",
+            key = "#owner.id"
+    )
+    public OwnerDto create(
+            final OwnerDto owner
+    ) {
+        Owner ownerModel = ownerMapper.toModel(owner);
+        Owner ownerResult = ownerDao.save(ownerModel);
+        return ownerMapper.toDto(ownerResult);
     }
 
     @Override
-    public void addCat(long ownerId, CatDto catDto) {
-        Owner updatedOwner = ownerDao.getById(ownerId);
-        Cat cat = CatMapper.CatDtoToModel(catDto);
+    @Transactional
+    @CachePut(
+            value = "OwnerService::getById",
+            key = "#owner.id"
+    )
+    public OwnerDto update(
+            final OwnerDto owner
+    ) {
+        Owner existing = ownerDao.findById(owner.getId()).orElseThrow(() -> new ResourceNotFoundException("Owner not found."));
 
-        updatedOwner.addCat(cat);
-        ownerDao.update(updatedOwner);
+        existing.setName(owner.getName());
+        existing.setBirthDate(owner.getBirthDate());
+        existing.setCatIds(owner.getCatIds());
+
+        Owner ownerResult = ownerDao.save(existing);
+        return ownerMapper.toDto(ownerResult);
     }
 
     @Override
-    public void delete(long ownerId) {
-        Owner owner = ownerDao.getById(ownerId);
-        ownerDao.delete(owner);
+    @Transactional
+    @CacheEvict(
+            value = "OwnerService::getById",
+            key = "#id"
+    )
+    public void delete(
+            final Long id
+    ) {
+        ownerDao.deleteById(id);
     }
 
     @Override
-    public OwnerDto getByName(String name) {
-        return OwnerMapper.OwnerModelToDto(ownerDao.getByName(name));
+    @Transactional
+    @CachePut(
+            value = "OwnerService::getById",
+            key = "#ownerId"
+    )
+    public OwnerDto addCat(
+            final Long ownerId,
+            final Long catId
+    ) {
+        Owner existing = ownerDao.findById(ownerId).orElseThrow(() -> new ResourceNotFoundException("Owner not found."));
+        Cat cat = catDao.findById(catId).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
+
+
+        ownerDao.addCat(ownerId, catId);
+        Owner result = ownerDao.findById(ownerId).orElseThrow(() -> new ResourceNotFoundException("Owner not found."));
+        return ownerMapper.toDto(result);
     }
 
     @Override
+    @Cacheable(
+            value = "OwnerService::getById",
+            key = "#id"
+    )
+    public OwnerDto getById(
+            final Long id
+    ) {
+        return ownerMapper.toDto(ownerDao.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Owner not found.")));
+    }
+
+    @Override
+    @Caching(cacheable = {
+            @Cacheable(
+                    value = "OwnerService::getAllByBirthDateRange",
+                    key = "#start"
+            ),
+            @Cacheable(
+                    value = "OwnerService::getAllByBirthDateRange",
+                    key = "#end"
+            )
+    })
+    public List<OwnerDto> getAllByBirthDateRange(
+            final Timestamp start,
+            final Timestamp end
+    ) {
+        List<Owner> owners = ownerDao.getAllByBirthDateRange(start, end);
+
+        return ownerMapper.toDto(owners);
+    }
+
+    @Override
+    @Cacheable(
+            value = "OwnerService::getAll"
+    )
     public List<OwnerDto> getAll() {
-        List<Owner> ownerList = ownerDao.getAll();
-        List<OwnerDto> ownerDtoList = new ArrayList<>();
-
-        for (Owner owner : ownerList) {
-            ownerDtoList.add(OwnerMapper.OwnerModelToDto(owner));
-        }
-
-        return ownerDtoList;
+        List<Owner> allOwners = ownerDao.findAll();
+        return ownerMapper.toDto(allOwners);
     }
+
 }

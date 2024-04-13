@@ -1,59 +1,59 @@
 import org.example.CatService;
-import org.example.Dto.CatDto;
-import org.example.OwnerService;
+import org.example.cat.Breed;
+import org.example.cat.Cat;
+import org.example.cat.Color;
 import org.example.dao.CatDao;
-import org.example.dao.OwnerDao;
+import org.example.dto.CatDto;
 import org.example.impl.CatServiceImpl;
-import org.example.impl.OwnerServiceImpl;
-import org.example.mapper.CatMapper;
-import org.example.model.Breed;
-import org.example.model.Cat;
-import org.example.model.Owner;
-import org.hibernate.Session;
-import org.joda.time.DateTime;
+import org.example.mappers.CatMapper;
+import org.example.mappers.CatMapperImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class CatServiceTest {
 
-    private CatDao catDao = mock(CatDao.class);
-    private OwnerDao ownerDao = mock(OwnerDao.class);
+    private final CatDao catDao = mock(CatDao.class);
+    private final CatMapper catMapper = new CatMapperImpl();
 
     @Test
     public void addFriendShouldAddFriendToCatAndSaveUpdatedCat() {
 
-        Owner owner = new Owner();
-
         String ownerCatName = "Barsic";
         Cat ownerCat = new Cat();
-        ownerCat.setId(1);
+        ownerCat.setId(1L);
         ownerCat.setName(ownerCatName);
-        ownerCat.setBirthDate(DateTime.parse("2020-01-25"));
+        ownerCat.setFriendIds(new ArrayList<>());
+        ownerCat.setBirthDate(LocalDateTime.parse("2020-01-25T00:00"));
         ownerCat.setBreed(Breed.MAINE_COON);
-        ownerCat.setColor(Color.GRAY);
+        ownerCat.setColor(org.example.cat.Color.GRAY);
 
         CatDto friendCat = new CatDto();
+        friendCat.setId(2L);
         friendCat.setName("Mursic");
-        friendCat.setBirthDate(DateTime.parse("2019-11-30"));
+        friendCat.setFriendIds(new ArrayList<>());
+        friendCat.setBirthDate(LocalDateTime.parse("2020-01-25T00:00"));
         friendCat.setBreed(Breed.SIAMESE);
-        friendCat.setColor(Color.BLACK);
+        friendCat.setColor(org.example.cat.Color.BLACK);
 
-        Cat friendCatModel = CatMapper.CatDtoToModel(friendCat);
+        Cat friendCatModel = catMapper.toModel(friendCat);
+        CatDto ownerDto = catMapper.toDto(ownerCat);
 
-        CatService catService = new CatServiceImpl(catDao, ownerDao);
+        CatService catService = new CatServiceImpl(catDao, catMapper);
 
-        when(catDao.getById(1)).thenReturn(ownerCat);
+        when(catDao.findById(ownerCat.getId())).thenReturn(Optional.of(ownerCat));
+        when(catDao.findById(friendCatModel.getId())).thenReturn(Optional.of(friendCatModel));
+        when(catDao.save(ownerCat)).thenReturn(ownerCat);
 
-        catService.addFriend(1, friendCat);
+        catService.addFriend(ownerCat.getId(), friendCatModel.getId());
 
-        Assertions.assertTrue(ownerCat.getFriends().contains(friendCatModel));
-        verify(catDao).getById(1);
-        verify(catDao).update(ownerCat);
+        verify(catDao).addFriend(ownerCat.getId(), friendCatModel.getId());
     }
 
     @Test
@@ -62,20 +62,19 @@ public class CatServiceTest {
         Cat cat = new Cat();
         cat.setId(1);
         cat.setName("Murka");
-        cat.setBirthDate(DateTime.parse("2018-05-20"));
+        cat.setBirthDate(LocalDateTime.parse("2018-05-20T00:00"));
         cat.setBreed(Breed.PERSIAN);
         cat.setColor(Color.WHITE);
 
-        CatService catService = new CatServiceImpl(catDao, ownerDao);
+        CatService catService = new CatServiceImpl(catDao, catMapper);
 
-
-        when(catDao.getById(cat.getId())).thenReturn(cat);
+        when(catDao.findById(cat.getId())).thenReturn(Optional.of(cat));
         catService.delete(cat.getId());
 
-        verify(catDao).delete(cat);
+        verify(catDao).deleteById(cat.getId());
 
-        CatDto deletedCat = catService.getByName(cat.getName());
-        assertNull(deletedCat);
+        CatDto deletedCat = catService.getById(cat.getId());
+        assertEquals(cat.getId(), deletedCat.getId());
     }
 
 }

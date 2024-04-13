@@ -1,23 +1,38 @@
 package org.example;
 
-import org.example.Dto.CatDto;
-import org.example.model.Cat;
-import org.example.model.Owner;
+import org.example.cat.Color;
+import org.example.dto.CatDto;
 
 import java.util.List;
 
 public interface CatService {
 
-    void create(CatDto catDto);
+    CatDto create(
+            CatDto cat
+    );
 
-    void changeOwner(long ownerId, long catId);
+    CatDto update(
+            CatDto cat
+    );
 
-    void addFriend(long ownerCatId, CatDto friendCatDto);
+    void delete(
+            Long id
+    );
 
-    void delete(long catId);
+    CatDto addFriend(
+            Long catId,
+            Long friendId
+    );
 
-    CatDto getByName(String name);
+    CatDto getById(
+            Long id
+    );
+
+    List<CatDto> getAllByColor(
+            Color color
+    );
 
     List<CatDto> getAll();
 
 }
+

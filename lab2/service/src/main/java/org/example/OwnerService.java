@@ -1,21 +1,39 @@
 package org.example;
 
-import org.example.Dto.CatDto;
-import org.example.Dto.OwnerDto;
-import org.example.model.Cat;
-import org.example.model.Owner;
+import org.example.dto.OwnerDto;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.sql.Timestamp;
+import java.time.Duration;
 import java.util.List;
 
 public interface OwnerService {
 
-    void create(OwnerDto ownerDto);
+    OwnerDto create(
+            OwnerDto owner
+    );
 
-    void addCat(long ownerId, CatDto catDto);
+    OwnerDto update(
+            OwnerDto owner
+    );
 
-    void delete(long ownerId);
+    void delete(
+            Long id
+    );
 
-    OwnerDto getByName(String name);
+    OwnerDto addCat(
+            Long ownerId,
+            Long catId
+    );
+
+    OwnerDto getById(
+            Long id
+    );
+
+    List<OwnerDto> getAllByBirthDateRange(
+            Timestamp start,
+            Timestamp end
+    );
 
     List<OwnerDto> getAll();
 

@@ -2,67 +2,134 @@ package org.example.impl;
 
 import lombok.AllArgsConstructor;
 import org.example.CatService;
-import org.example.Dto.CatDto;
+import org.example.cat.Cat;
+import org.example.cat.Color;
 import org.example.dao.CatDao;
-import org.example.dao.OwnerDao;
-import org.example.mapper.CatMapper;
-import org.example.model.Cat;
-import org.example.model.Owner;
+import org.example.dto.CatDto;
+import org.example.exception.ResourceNotFoundException;
+import org.example.mappers.CatMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@Service
 @AllArgsConstructor
 public class CatServiceImpl implements CatService {
 
-    private CatDao catDao;
-    private OwnerDao ownerDao;
+    private final CatDao catDao;
+    private final CatMapper catMapper;
 
-    @Override
-    public void create(CatDto catDto) {
-        Cat cat = CatMapper.CatDtoToModel(catDto);
-        catDao.create(cat);
+    @Transactional
+    @Cacheable(
+            value = "CatService::getById",
+            condition = "#cat.id!=null",
+            key = "#cat.id"
+    )
+    public CatDto create(
+            final CatDto cat
+    ) {
+        Cat catModel = catMapper.toModel(cat);
+        Cat catResult = catDao.save(catModel);
+        return catMapper.toDto(catResult);
     }
 
     @Override
-    public void changeOwner(long ownerId, long catId) {
-        Cat updatedCat = catDao.getById(catId);
-        Owner owner = ownerDao.getById(ownerId);
-        updatedCat.setOwner(owner);
-        catDao.update(updatedCat);
+    @Transactional
+    @CachePut(
+            value = "CatService::getById",
+            key = "#cat.id"
+    )
+    public CatDto update(
+            final CatDto cat
+    ) {
+        Cat existing = catDao.findById(cat.getId()).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
+
+        existing.setOwner(cat.getOwner());
+        existing.setName(cat.getName());
+        existing.setBirthDate(cat.getBirthDate());
+        existing.setBreed(cat.getBreed());
+        existing.setColor(cat.getColor());
+        existing.setFriendIds(cat.getFriendIds());
+
+        Cat catResult = catDao.save(existing);
+        return catMapper.toDto(catResult);
     }
 
     @Override
-    public void addFriend(long ownerCatId, CatDto friendCatDto) {
-        Cat updatedCat = catDao.getById(ownerCatId);
-        Cat friendCat = CatMapper.CatDtoToModel(friendCatDto);
-
-        updatedCat.addFriend(friendCat);
-        catDao.update(updatedCat);
+    @Transactional
+    @CacheEvict(
+            value = "CatService::getById",
+            key = "#id"
+    )
+    public void delete(
+            final Long id
+    ) {
+        catDao.deleteById(id);
     }
 
     @Override
-    public void delete(long catId) {
-        Cat cat = catDao.getById(catId);
-        catDao.delete(cat);
+    @Transactional
+    @Caching(cacheable = {
+            @Cacheable(
+                    value = "CatService::getById",
+                    condition = "#catId!=null",
+                    key = "#catId"
+            ),
+            @Cacheable(
+                    value = "CatService::getById",
+                    condition = "#friendId!=null",
+                    key = "#friendId"
+            )
+    })
+    public CatDto addFriend(
+            final Long catId,
+            final Long friendId
+    ) {
+        Cat existing = catDao.findById(catId).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
+        Cat friend = catDao.findById(friendId).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
+
+        catDao.addFriend(catId, friendId);
+        Cat result = catDao.findById(catId).orElseThrow(() -> new ResourceNotFoundException("Cat not found."));
+        return catMapper.toDto(result);
     }
 
     @Override
-    public CatDto getByName(String name) {
-        Cat cat = catDao.getByName(name);
-        return CatMapper.CatModelToDto(cat);
+    @Cacheable(
+            value = "CatService::getById",
+            key = "#id"
+    )
+    public CatDto getById(
+            final Long id
+    ) {
+        return catMapper.toDto(catDao.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Cat not found.")));
     }
 
     @Override
+    @Cacheable(
+            value = "CatService::getAllByColor",
+            key = "#color"
+    )
+    public List<CatDto> getAllByColor(
+            final Color color
+    ) {
+        List<Cat> cats = catDao.getAllByColor(color.toString());
+        return catMapper.toDto(cats);
+    }
+
+    @Override
+    @Cacheable(
+            value = "CatService::getAll"
+    )
     public List<CatDto> getAll() {
-        List<Cat> catList = catDao.getAll();
-        List<CatDto> catDtosList = new ArrayList<>();
-
-        for (Cat cat : catList) {
-            catDtosList.add(CatMapper.CatModelToDto(cat));
-        }
-
-        return catDtosList;
+        List<Cat> allCats = catDao.findAll();
+        return catMapper.toDto(allCats);
     }
 
 }
