@@ -65,7 +65,7 @@ public class PostMethodTest {
         var secondCat = new CatDto(
                 null,
                 "Shadow",
-                LocalDateTime.parse("2014-05-20T00:00"),
+                LocalDateTime.parse("2014-01-20T00:00"),
                 Breed.SIAMESE,
                 Color.WHITE,
                 null,
